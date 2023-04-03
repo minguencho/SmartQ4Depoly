@@ -1,0 +1,76 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .login-container {
+        margin: 100px auto;
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    .login-container h2 {
+        margin-top: 0;
+    }
+
+    .input-field {
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    .input-field label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .input-field input {
+        padding: 5px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+
+</style>
+
+<body>
+    <div class="login-container">
+        <h2>Sign IN</h2>
+        <form>
+            <div class="input-field">
+                <label for="username">Name</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-field">
+                <label for="user_email">Email</label>
+                <input type="text" id="user_email" name="user_email" required>
+            </div>
+            <div class="input-field">
+                <label for="user_id">ID</label>
+                <input type="text" id="user_id" name="user_id" required>
+            </div>
+            <div class="input-field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">submit</button>
+        </form>
+    </div>
+</body>
