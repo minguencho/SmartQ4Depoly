@@ -1,15 +1,15 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Request
+from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
-from smartQ import token
+from smartQ import token, database
 from smartQ.hashing import Hash
 
 router = APIRouter(tags=['Authentication'])
 
 
 @router.post('/login')
-def login(db: Request, request: OAuth2PasswordRequestForm = Depends()):
-    user = db.app.database["Users"].find_one({"email": request.username})
+def login(request: OAuth2PasswordRequestForm = Depends()):
+    user = database.find_user(request.username)
     user['_id'] = str(user['_id'])
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

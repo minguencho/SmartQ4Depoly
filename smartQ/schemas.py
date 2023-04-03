@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
 
@@ -52,12 +52,7 @@ class Blogs(BaseModel):
 
     # creator = relationship("User", back_populates="blogs")
 
-
-class Users(BaseModel):
-    __tablename__ = 'users'
-
-    id: Optional[int]
-    email: str
-    password: str
-
-    # blogs = relationship('Blog', back_populates="creator")
+class InferenceData(BaseModel):
+    image: str
+    model_names: List[str]
+    device_names: List[str]

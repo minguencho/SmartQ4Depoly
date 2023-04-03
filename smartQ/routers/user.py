@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import APIRouter, status, HTTPException, Request
 
-from smartQ import schemas, hashing
+from smartQ import schemas, hashing, database
 
 
 router = APIRouter(
@@ -9,19 +9,20 @@ router = APIRouter(
     tags=['Users']
 )
 
-@router.post('/')
-def create_user(db: Request, request: schemas.User):
+@router.post('/create')
+def create_user(request: schemas.User):
     new_user = schemas.User(email=request.email, password=hashing.Hash.bcrypt(request.password))
-    dict_new_user = dict(new_user)
-    print(dict_new_user)
-    db.app.database["Users"].insert_one(dict_new_user)
-    return new_user
+    if not database.check_user(new_user.email):
+        raise HTTPException(status_code=status.HTTP_226_IM_USED, detail="User email is already exist")
+    
+    database.insert_user(new_user)
+    
+    return f"{new_user.email} User created"
 
 
-@router.get('/get')
-def get_user(db: Request):
-    user = db.app.database["Users"].find_one()
-    user['_id'] = str(user['_id'])
+@router.get('/get/{email}')
+def get_user(email: str):
+    user = database.find_user(email)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User with the id ? is not available")
     
