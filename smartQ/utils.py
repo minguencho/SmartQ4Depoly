@@ -42,11 +42,11 @@ def make_routing_key(device_names):
     return routing_keys
 
 
-def publish_inference_message(messages, routing_keys):
+def publish_inference_message(messages, exchange_name, routing_keys):
     for message in messages:
         # model = {'model_name': resnet, 'model_contents': 1e23nfjui}
         for routing_key in routing_keys:
-            rabbitmq.publish(message=message, exchange_name='input', routing_key_name=routing_key)
+            rabbitmq.publish(message=message, exchange_name=exchange_name, routing_key_name=routing_key)
         
     return True
 
@@ -56,3 +56,12 @@ def extract_onnx(onnx):
     onnx_contents = np.frombuffer(base64.b64decode(onnx), np.uint8)
     
     return onnx_contents
+
+
+def result_to_list(results):
+    results_list = []
+    for result in results:
+        result['_id'] = str(result['_id'])
+        results_list.append(dict(result))
+    
+    return results_list

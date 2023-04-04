@@ -8,9 +8,17 @@ router = APIRouter(
 )
 
 
+@router.get('/insert', status_code=status.HTTP_200_OK)
+def insert_test_data(current_user: schemas.User = Depends(oauth2.get_current_user)):
+    test_dict = {"email": current_user.email, "inf_object": "dog", "accuracy": "95"}
+    database.insert_test_data(test_dict)
+    return f'{test_dict} inserted'
 
-@router.post('/device_register', status_code=status.HTTP_200_OK)
-def search_all(device_name: str, current_user: schemas.User = Depends(oauth2.get_current_user)):
+
+@router.get('/all', status_code=status.HTTP_200_OK)
+def search_all(current_user: schemas.User = Depends(oauth2.get_current_user)):
+    email = current_user.email
+    results = database.get_results(email)
+    results_list = utils.result_to_list(results)
     
-
-    return "search"
+    return results_list

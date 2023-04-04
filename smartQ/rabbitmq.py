@@ -22,3 +22,7 @@ def publish(message, exchange_name, routing_key_name):
     )
     
     return True
+
+def make_exchange(exchange_name):
+    channel.exchange_declare(exchange=exchange_name, exchange_type='direct')
+    return True
