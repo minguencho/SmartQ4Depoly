@@ -11,7 +11,6 @@ db = mongodb_client[database]
 def find_user(email):
     user = db['Users'].find_one({'email': email})
     print(user)
-    # user['_id'] = str(user['_id'])
     return user
 
 # create_user

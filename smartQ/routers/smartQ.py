@@ -22,7 +22,7 @@ def device_register(device_name: str, current_user: schemas.User = Depends(oauth
 
 
 
-@router.post('my_model_register', status_code=status.HTTP_200_OK)
+@router.post('/my_model_register', status_code=status.HTTP_200_OK)
 def my_model_register(get_my_model: schemas.GetMyModel, current_user: schemas.User = Depends(oauth2.get_current_user)):
     
     onnx_contents = utils.extract_onnx(get_my_model.onnx)
