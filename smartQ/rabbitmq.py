@@ -10,11 +10,15 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(RABBITMQ_SERVER_I
 
 channel = connection.channel()
 
-def publish(header, message, exchange_name, routing_key_name):
+channel.exchange_declare(exchange='input', exchange_type='direct')
+channel.exchange_declare(exchange='output', exchange_type='direct')
+
+
+def publish(message, exchange_name, routing_key_name):
     channel.basic_publish(
         exchange=exchange_name,
         routing_key=routing_key_name,
-        body=pickle.dumps({'header': header, 'message': message})
+        body=pickle.dumps({'message': message})
     )
     
     return True

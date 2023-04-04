@@ -2,12 +2,6 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 
-class Blog(BaseModel):
-    title: str
-    body: str
-    class Config():
-        orm_mode = True
-
 
 class User(BaseModel):
     email:str
@@ -16,14 +10,6 @@ class User(BaseModel):
 
 class ShowUser(BaseModel):
     email:str
-    class Config():
-        orm_mode = True
-
-
-class ShowBlog(BaseModel):
-    title: str
-    body:str
-
     class Config():
         orm_mode = True
 
@@ -41,18 +27,24 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     email: Optional[str] = None
     
-    
-class Blogs(BaseModel):
-    __tablename__ = 'blogs'
-
-    id: Optional[int]
-    title: str
-    body: str
-    # user_id = Column(Integer, ForeignKey('users.id'))
-
-    # creator = relationship("User", back_populates="blogs")
 
 class InferenceData(BaseModel):
     image: str
     model_names: List[str]
     device_names: List[str]
+    
+    
+class Device(BaseModel):
+    email: str
+    device_name: str
+
+
+class GetMyModel(BaseModel):
+    onnx: str
+    my_model_name: str
+    
+
+class MyModel(BaseModel):
+    email: str
+    onnx: str
+    my_model_name: str
