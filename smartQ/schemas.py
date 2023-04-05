@@ -34,17 +34,18 @@ class InferenceData(BaseModel):
     device_names: List[str]
     
     
-class Device(BaseModel):
-    email: str
+class GetDevice(BaseModel):
     device_name: str
 
 
-class GetMyModel(BaseModel):
+class Device(GetDevice):
+    email: str
+
+
+class GetModel(BaseModel):
     onnx: str
-    my_model_name: str
+    model_name: str
     
 
-class MyModel(BaseModel):
-    email: str
-    onnx: str
-    my_model_name: str
+class Model(GetModel):
+    model_name: str

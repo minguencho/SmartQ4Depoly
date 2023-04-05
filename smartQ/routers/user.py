@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import APIRouter, status, HTTPException
 
-from smartQ import schemas, hashing, database
+from smartQ import schemas, hashing, database, rabbitmq
 
 
 router = APIRouter(
@@ -16,6 +16,7 @@ def create_user(request: schemas.User):
         raise HTTPException(status_code=status.HTTP_226_IM_USED, detail="User email is already exist")
     
     database.insert_user(new_user)
+    rabbitmq.make_exchange(new_user.email)
     
     return f"{new_user.email} User created"
 

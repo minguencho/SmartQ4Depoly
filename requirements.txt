@@ -5,6 +5,7 @@ bcrypt
 python-jose
 python-multipart
 pymongo
+pymongo[srv]
 pika
 numpy
 opencv-python

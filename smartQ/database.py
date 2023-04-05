@@ -45,14 +45,26 @@ def insert_device(device):
     db['Devices'].insert_one(dict(device))
     return True
 
-# my_model_register
-def check_my_model(email, my_model_name):
-    if db['Models'].find_one({'email': email}, {'my_model_name': my_model_name}):
+# model_register
+def check_model(email, model_name):
+    if db['Models'].find_one({'email': email}, {'model_name': model_name}):
         return True
     else:
         return False
     
-# my_model_register
-def insert_my_model(my_model):
-    db['Models'].insert_one(dict(my_model))
+# model_register
+def insert_model(model):
+    db['Models'].insert_one(dict(model))
     return True
+
+
+# insert_test_data
+def insert_test_data(dict):
+    db['Results'].insert_one(dict)
+    return True
+
+# search_all
+def get_results(email):
+    return db['Results'].find({'email': email})
+
+
