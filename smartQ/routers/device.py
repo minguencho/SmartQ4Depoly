@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 
-from smartQ import schemas, oauth2, utils, database
+from smartQ import schemas, oauth2, database
 
 router = APIRouter(
     prefix="/device",

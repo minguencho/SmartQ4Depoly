@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from smartQ import rabbitmq
 from smartQ.routers import authentication, user, device, model, inference, search
 
 app = FastAPI()
@@ -11,3 +12,7 @@ app.include_router(device.router)
 app.include_router(model.router)
 app.include_router(inference.router)
 app.include_router(search.router)
+
+
+Mongo = rabbitmq.Result_Saver()
+Mongo.consume()
