@@ -49,3 +49,8 @@ class Result_Saver():
         channel.basic_consume(on_message_callback=self.callback, queue=self.queue_name)
         print('[MongoDB] Start Consuming')
         channel.start_consuming()
+        
+    
+    def stop_consume(self):
+        print('[MongoDB] Stop Consuming')
+        channel.stop_consuming()
