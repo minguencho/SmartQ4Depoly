@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status
 
 from smartQ import schemas, oauth2, utils, database
 
@@ -16,6 +16,7 @@ response : None, just do inference
 @router.post('/inference', status_code=status.HTTP_200_OK)
 def inference(inf_data: schemas.InferenceData, current_user: schemas.User = Depends(oauth2.get_current_user)):
     user_email = current_user.email
+    
     image_msg = utils.img2msg(inf_data.image)
     models = database.get_models(current_user.email, inf_data.model_names)
     models_msg = utils.models2msg(models)

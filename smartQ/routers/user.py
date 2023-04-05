@@ -1,13 +1,19 @@
-from fastapi import APIRouter
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status, HTTPException, Request
 
 from smartQ import schemas, hashing, database, rabbitmq
-
-
+from fastapi.templating import Jinja2Templates
 router = APIRouter(
     prefix="/user",
     tags=['Users']
 )
+
+templates = Jinja2Templates(directory="frontend")
+
+@router.get("/signin")
+async def home_page(request : Request):
+    context = {'request': request}
+    return templates.TemplateResponse("/signin.html", context)
+
 
 @router.post('/create')
 def create_user(request: schemas.User):
