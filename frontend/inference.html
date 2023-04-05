@@ -1,0 +1,209 @@
+<html>
+    <head>
+        <title>추론</title>
+    </head>
+    <body>
+        <script>
+            /**
+             * @param {string} formSelector
+             * @return {object | null}
+             */
+                function serializeForm(formSelector) {
+                const formElm = document.documentElement.querySelector(formSelector);
+                if (formElm === null) {
+                    alert('failed to find form element');
+                    return null;
+                }
+
+                const values = {};
+                for (const childElm of formElm.elements) {
+                    if (!(childElm instanceof HTMLInputElement)) {
+                        continue;
+                    }
+
+                    switch (childElm.type.toLowerCase()) {
+                        case 'checkbox': {
+                            if (childElm.attributes.hasOwnProperty('data-group')) {
+                                const groupName = childElm.attributes['data-group'].value;
+                                if (!(groupName in values)) {
+                                    values[groupName] = [];
+                                }
+
+                                if (childElm.checked) {
+                                    values[groupName].push(childElm.value);
+                                }
+                            }
+                            else {
+                                values[childElm.name] = childElm.checked;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                return values;
+            }
+
+            function readAsBase64(file) {
+                return new Promise((resolve, reject) => {
+                    if (!file)
+                        reject('invalid argument: file is invalid');
+                    
+                    const fileReader = new FileReader();
+                    fileReader.addEventListener('load', () => {
+                        resolve(fileReader.result);
+                    }, false);
+
+                    fileReader.readAsDataURL(file);
+                });
+            }
+
+            async function requestToInference() {
+                const [file] = document.documentElement.querySelector('#inf-form input[type="file"]')?.files;
+                if (!file) 
+                    return false;
+
+                const fileContentPromise = readAsBase64(file);
+
+                const payload = serializeForm('#inf-form');
+                if (payload == null) {
+                    return false;
+                }
+
+                payload.image = await fileContentPromise;
+                console.log(payload.image)
+                if (!payload.image.startsWith('data:image/')) {
+                    alert('Please select valid image file !');
+                    return false;
+                }
+                const res = await fetch(location.origin + '/home/get_inference_page/inference_request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });               
+            }
+
+            function multiSelect(value){
+
+                if(value=="OPEN") {
+                    Div.style.visibility="visible";
+                    Div.style.position="relative";
+                }
+                else {
+                    Div.style.visibility="hidden";
+                    Div.style.position="absolute";
+                }
+            }
+            
+            function al(){
+                alert("추론 시작. 최대 1분 소요")
+            }
+        
+        </script>
+        <style>
+            body {padding: auto; margin: auto; background-color: rgb(129, 182, 231);}
+
+            #divPosition{
+                background-color: rgb(219, 224, 229);
+                border: 3px;
+                position: absolute;
+                height: 400px;
+                width: 400px;
+                margin: -150px 0px 0px -200px;
+                top: 35%;
+                left: 50%;
+                padding: 5px;
+                border-radius: 2em;
+            }
+
+            #button{
+            width: 20%;
+            border: 0;
+            color: #277ef0;
+            outline: auto;
+            font-size: 15px;
+            flex-direction: column;
+            align-items: center;
+            font-weight: 600;
+            margin: 40px 0px 0px 250px;
+            }
+
+            #inferencebutton{
+            width: 40%;
+            border: 0;
+            color: #277ef0;
+            outline: auto;
+            font-size: 15px;
+            flex-direction: column;
+            align-items: center;
+            font-weight: 600;
+            }
+
+            .fileRegiBtn label {
+            display: inline-block; 
+            padding: .5em .75em; 
+            color: #ffffff; 
+            font-size: inherit; 
+            line-height: normal; 
+            vertical-align: middle; 
+            background-color: #277ef0; 
+            cursor: pointer; 
+            border: 1px solid #ebebeb; 
+            border-bottom-color: #e2e2e2; 
+            border-radius: .25em;
+            }
+
+            #select_model{
+                margin: 0px 100px 0px 100px;
+            }
+
+            select, ul { height: 100px; overflow: auto; width: 200px; border: 1px solid #000; }            
+            ul {list-style-type: none; margin: 0; padding: 0; overflow-x: hidden; }
+            li { margin: 0; padding: 0;}
+        </style>
+
+
+        <div id = "divPosition">
+
+            <center>
+
+            <h1 style="text-align: center;"> [Inference] </h1>
+
+            <form id='inf-form' method='post' onsubmit='return (requestToInference(), false);'>
+                <div class="fileRegiBtn">
+                    <label for="image_file">Upload IMG File</label>
+                    <input type="file" id="image_file" name ="image_file" accept='image/*' required='required' style="display: none">
+                </div>
+                
+                <br><br>
+                <div id='select_model' style="position :relative; font-size:12px;">
+                    <label>Model Select</label>
+                    <button onClick="multiSelect('OPEN')">▼</button>
+                    <br>
+                    <div id="Div" style="position :absolute; visibility:hidden; font-size:12px;">
+                        <div style="padding-top:3px;text-align:center">
+                            <ul>
+                                {% for model in model_names %}
+                                    <li><input type='checkbox' data-group='model_names' value='{{model}}'>{{ model }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div style="padding-top:3px;text-align:right">
+                            <input type="button" value="확인" onClick="multiSelect('CLOSE')">
+                        </div>
+                    </div>
+                </div>
+                
+                <br><br>
+                <button class = "button" id = "inferencebutton" type='reset'> Initialization </button>
+                <br><br>
+                <button class = "button" id = "inferencebutton" type='submit' onclick="al()"> Start Inference </button>
+
+            </form>
+            <button class="button" id = "button" onclick  = "location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
+            <center>
+        </div>
+    </body>
+</html>
