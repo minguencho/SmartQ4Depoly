@@ -18,7 +18,7 @@ def publish(message, exchange_name, routing_key_name):
     channel.basic_publish(
         exchange=exchange_name,
         routing_key=routing_key_name,
-        body=pickle.dumps({'message': message})
+        body=pickle.dumps(message)
     )
     
     return True
