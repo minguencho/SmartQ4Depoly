@@ -28,6 +28,11 @@ def login(response: Response, request: OAuth2PasswordRequestForm = Depends()):
     response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
     return {"access_token": access_token, "token_type": "bearer"}
 
+@router.get("/signin")
+async def home_page(request : Request):
+    context = {'request': request}
+    return templates.TemplateResponse("/signin.html", context)
+
 @router.get("/menu")
 async def home_page(request : Request):
     context = {'request': request}
