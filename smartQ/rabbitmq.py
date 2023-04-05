@@ -34,8 +34,9 @@ def make_exchange(exchange_name):
 
 class Result_Saver():
     def __init__(self):
-        channel.queue_declare('MongoDB')
-        channel.queue_bind(exchange='output', queue='MongoDB', routing_key='toMongoDB')
+        self.queue_name = 'MongoDB'
+        channel.queue_declare(self.queue_name)
+        channel.queue_bind(exchange='output', queue=self.queue_name, routing_key='toMongoDB')
 
 
     def callback(self, ch, method, properties, body):
@@ -44,7 +45,7 @@ class Result_Saver():
         ch.basic_ack(delivery_tag=method.delivery_tag)
         
 
-    def consume(self, queue_name):
-        channel.basic_consume(on_message_callback=self.callback, queue=queue_name)
+    def consume(self):
+        channel.basic_consume(on_message_callback=self.callback, queue=self.queue_name)
         print('[MongoDB] Start Consuming')
         channel.start_consuming()
