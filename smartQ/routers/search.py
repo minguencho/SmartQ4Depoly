@@ -19,6 +19,8 @@ def insert_test_data(current_user: schemas.User = Depends(oauth2.get_current_use
 def search_all(current_user: schemas.User = Depends(oauth2.get_current_user)):
     email = current_user.email
     results = database.get_results(email)
+    if not results:
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail="Any results in your database")
     results_list = utils.result_to_list(results)
     
     return results_list
