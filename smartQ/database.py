@@ -9,16 +9,18 @@ db = mongodb_client[database]
 
 
 
-'''
-def find_user(email):
+# login
+def get_user(email):
+    print("a")
+    print("type email", type(email))
     user = db['Users'].find_one({'email': email})
+    print("b")
     return user
-'''
+
 # MongoDB result insert
 def insert_result(message):
     db['Results'].insert_one(message)
     return True
-
 
 # create_user
 def check_user(email):
