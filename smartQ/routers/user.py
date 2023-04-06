@@ -15,9 +15,10 @@ async def home_page(request : Request):
     return templates.TemplateResponse("/signin.html", context)
 
 
-@router.post('/create')
+@router.post('/signin')
 def create_user(request: schemas.User):
     new_user = schemas.User(email=request.email, password=hashing.Hash.bcrypt(request.password))
+    print(new_user)
     if database.check_user(new_user.email):
         raise HTTPException(status_code=status.HTTP_226_IM_USED, detail="User email is already exist")
     
