@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Response, Request
+from fastapi import APIRouter, Response, Request
 from fastapi.templating import Jinja2Templates
 from smartQ import token, database
 from smartQ.hashing import Hash
@@ -12,6 +12,11 @@ templates = Jinja2Templates(directory="frontend")
 async def home_page(request : Request):
     context = {'request': request}
     return templates.TemplateResponse("/login.html", context)
+
+"""@router.get("/menu")
+async def home_page(request : Request):
+    context = {'request': request}
+    return templates.TemplateResponse("/menu.html", context)"""
 
 @router.post('/login')
 async def login(request: Request, response: Response):
@@ -42,6 +47,7 @@ async def login(request: Request, response: Response):
                 response = templates.TemplateResponse("/login.html", {"request": request, "msg": msg})
                 response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
                 return response
+                #templates.TemplateResponse("menu.html", {"response":response})
     except:
         errors.append("Something Wrong")
         return templates.TemplateResponse("login.html", {"request": request, "errors": errors})
