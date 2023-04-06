@@ -9,3 +9,4 @@ pymongo[srv]
 pika
 numpy
 opencv-python
+jinja2
