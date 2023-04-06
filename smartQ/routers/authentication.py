@@ -29,7 +29,7 @@ async def login(request: Request, response: Response):
     try:
         user = database.get_user(user_email)
         if not user:
-            errors.append("Eamil does not exists")
+            errors.append("Email does not exists")
             return templates.TemplateResponse("login.html", {"request": request, "errors": errors})
         else:
             if not Hash.verify(user["password"], password):
