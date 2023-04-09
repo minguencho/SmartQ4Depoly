@@ -1,17 +1,19 @@
 <html>
-    <body>
-        <style>
+
+<body>
+    <style>
         #home {
-        margin: 375px 0px 0px 900px;
-        position :absolute;
-        border: 0;
-        color: #277ef0;
-        outline: auto;
-        font-size: 15px;
-        flex-direction: column;
-        align-items: center;
-        }          
-        #divPosition{
+            margin: 375px 0px 0px 900px;
+            position: absolute;
+            border: 0;
+            color: #277ef0;
+            outline: auto;
+            font-size: 15px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #divPosition {
             background-color: rgb(129, 182, 231);
             border: 3px;
             position: absolute;
@@ -23,7 +25,8 @@
             padding: 5px;
             border-radius: 2em;
         }
-        #button{
+
+        #button {
             width: 40%;
             border: 0;
             color: #277ef0;
@@ -33,7 +36,8 @@
             align-items: center;
             font-weight: 600;
         }
-        button.homebutton{
+
+        button.homebutton {
             position: absolute;
             color: #277ef0;
             right: 0%;
@@ -46,22 +50,34 @@
             align-items: center;
             font-weight: 400;
         }
+    </style>
+    <center>
 
-        </style>
-         <center>
-            <div id = "divPosition">
-                <br>
-                <h1> [ Device Register ] </h1>
-                    <form id='inf-form' method='post' onsubmit='return (requestToCustomModel(), false);'>
-                        <br>
-                        <input type='text' name='custom_model_name' placeholder='Insert Deive Name'>
-                        <br>
-                        <br>
-                        <button class="button" id = "button" type='submit' name='submitButton' value='Register'> Register </button>
-                    </form>
-            <button class = "homebutton" id  = 'home' onclick  = "location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
+        <div id="divPosition">
+            <br>
+            <h1> [ Device Register ] </h1>
+            {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
             </div>
-            
-            </center>
-    </body>
+            {% endif %}
+            {% for error in errors %}
+            <div class="alert alert-danger" , role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+            <form id='inf-form' method='post' onsubmit='return (requestToCustomModel(), false);'>
+                <br>
+                <input type='text' name='device_name' placeholder='Insert Deive Name'>
+                <br>
+                <br>
+                <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
+                </button>
+            </form>
+            <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
+        </div>
+
+    </center>
+</body>
+
 </html>

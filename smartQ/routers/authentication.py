@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Response, Request
+from fastapi import APIRouter, Response, Request
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from smartQ import token, database
 from smartQ.hashing import Hash
@@ -10,14 +11,12 @@ templates = Jinja2Templates(directory="frontend")
 # Get Home Pages
 @router.get("/login")
 async def home_page(request : Request):
-    context = {'request': request}
-    return templates.TemplateResponse("/login.html", context)
+    return templates.TemplateResponse("/login.html", {'request': request})
 
 @router.post('/login')
 async def login(request: Request, response: Response):
     form = await request.form()
     user_email = form.get("user_id")
-    print(user_email)
     password = form.get("password")
     
     errors = []
@@ -29,7 +28,7 @@ async def login(request: Request, response: Response):
     try:
         user = database.get_user(user_email)
         if not user:
-            errors.append("Eamil does not exists")
+            errors.append("Email does not exists")
             return templates.TemplateResponse("login.html", {"request": request, "errors": errors})
         else:
             if not Hash.verify(user["password"], password):
@@ -37,7 +36,6 @@ async def login(request: Request, response: Response):
                 return templates.TemplateResponse("login.html", {"request": request, "errors": errors})
             else:
                 msg = "Login Successful"
-                print(msg)
                 access_token = token.create_access_token(data={"sub": user["email"]})
                 response = templates.TemplateResponse("/login.html", {"request": request, "msg": msg})
                 response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
