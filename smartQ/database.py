@@ -11,10 +11,7 @@ db = mongodb_client[database]
 
 # login
 def get_user(email):
-    print("a")
-    print("type email", type(email))
     user = db['Users'].find_one({'email': email})
-    print("b")
     return user
 
 # MongoDB result insert
