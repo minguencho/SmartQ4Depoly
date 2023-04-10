@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException, Request
+from fastapi import APIRouter, Request
 
 from smartQ import schemas, hashing, database, rabbitmq
 from fastapi.templating import Jinja2Templates
@@ -10,21 +10,37 @@ router = APIRouter(
 templates = Jinja2Templates(directory="frontend")
 
 @router.get("/signin")
-async def home_page(request : Request):
-    context = {'request': request}
-    return templates.TemplateResponse("/signin.html", context)
+async def home_page(request: Request):
+    return templates.TemplateResponse("/signin.html", {'request': request})
 
 
-@router.post('/create')
-def create_user(request: schemas.User):
-    new_user = schemas.User(email=request.email, password=hashing.Hash.bcrypt(request.password))
-    if database.check_user(new_user.email):
-        raise HTTPException(status_code=status.HTTP_226_IM_USED, detail="User email is already exist")
+@router.post('/signin')
+async def create_user(request: Request):
+    form = await request.form()
+    user_email = form.get("user_email")
+    password = form.get("password")
     
-    database.insert_user(new_user)
-    rabbitmq.make_exchange(new_user.email)
+    errors = []
+    if not user_email:
+        errors.append("Please Enter Email")
+    if not password:
+        errors.append("Please Enter Password ")
     
-    return f"{new_user.email} User created"
+    try:
+        new_user = schemas.User(email=user_email, password=hashing.Hash.bcrypt(password))
+        if database.check_user(new_user.email):
+            errors.append("Email already exists")
+            return templates.TemplateResponse("signin.html", {"request": request, "errors": errors})
+        else:
+            database.insert_user(new_user)
+            rabbitmq.make_exchange(new_user.email)
+            msg = "User created"
+            return templates.TemplateResponse("signin.html", {"request": request, "msg": msg})
+ 
+    except:
+        errors.append("Something Wrong")
+        return templates.TemplateResponse("signin.html", {"request": request, "errors": errors})
+
 
 """
 @router.get('/get/{email}')
