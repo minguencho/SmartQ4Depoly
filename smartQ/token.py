@@ -17,7 +17,6 @@ def create_access_token(data: dict):
 
 
 def verify_token(token: str):
-    print('1')
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -25,7 +24,6 @@ def verify_token(token: str):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print('2')
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception

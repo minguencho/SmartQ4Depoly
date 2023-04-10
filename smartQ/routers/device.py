@@ -20,18 +20,15 @@ def device_page(request: Request):
 async def device_register(request: Request):
     form = await request.form()
     device_name = form.get("device_name")
-    print(device_name)
 
     errors = []
     try:
         scheme,_,access_token = request.cookies.get("access_token").partition(" ")
-        print(access_token)
         if access_token is None:
             errors.append("You have to Login first")
             return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
         else:
             user_email = token.verify_token(access_token)
-            print(user_email)
             device = schemas.Device(email=user_email, device_name=device_name)
             if not database.check_device(device.email, device.device_name):
                 errors.append(f"You already have device name [{device_name}]")
