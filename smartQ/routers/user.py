@@ -1,32 +1,43 @@
-from fastapi import APIRouter, status, HTTPException, Request
-
+from fastapi import APIRouter, Request, Form, Response
 from smartQ import schemas, hashing, database, rabbitmq
 from fastapi.templating import Jinja2Templates
-router = APIRouter(
-    prefix="/user",
-    tags=['Users']
-)
+from fastapi.responses import RedirectResponse
+from fastapi.responses import HTMLResponse
+router = APIRouter(tags=['login'])
 
 templates = Jinja2Templates(directory="frontend")
 
 @router.get("/signin")
-async def home_page(request : Request):
+async def signin(request : Request):
     context = {'request': request}
     return templates.TemplateResponse("/signin.html", context)
 
+@router.get("/")
+async def tologin(request : Request):
+    context  = {'request': request}
+    return templates.TemplateResponse("/login.html", context)
 
 @router.post('/signin')
-def create_user(request: schemas.User):
-    new_user = schemas.User(email=request.email, password=hashing.Hash.bcrypt(request.password))
-    print(new_user)
-    if database.check_user(new_user.email):
-        raise HTTPException(status_code=status.HTTP_226_IM_USED, detail="User email is already exist")
+async def create_user(request: Request, response : Response):
     
-    database.insert_user(new_user)
-    rabbitmq.make_exchange(new_user.email)
-    
-    return f"{new_user.email} User created"
+    form = await request.form()
+    email = form.get("user_id")
+    password = form.get("password")
 
+    new_user = schemas.User(email = email, password=hashing.Hash.bcrypt(password))
+
+    if database.check_user(new_user.email):
+        error = "This id is already used, try other ID"
+        print(error)
+        return templates.TemplateResponse("signin.html",{"request" : request, "error" : error})
+        #raise HTTPException(status_code=status.HTTP_226_IM_USED, detail="User email is already exist")
+    else:
+        msg = "Register Successful " 
+        print(msg)
+        database.insert_user(new_user)
+        rabbitmq.make_exchange(new_user.email)
+        context = {'request' : request, 'success' : True}
+        return templates.TemplateResponse("login.html", context)
 """
 @router.get('/get/{email}')
 def get_user(email: str):
