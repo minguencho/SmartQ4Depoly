@@ -10,8 +10,7 @@ templates = Jinja2Templates(directory="frontend")
 # Get Home Pages
 @router.get("/login")
 async def home_page(request : Request):
-    context = {'request': request}
-    return templates.TemplateResponse("/login.html", context)
+    return templates.TemplateResponse("/login.html", {'request': request})
 
 """@router.get("/menu")
 async def home_page(request : Request):
@@ -22,7 +21,6 @@ async def home_page(request : Request):
 async def login(request: Request, response: Response):
     form = await request.form()
     user_email = form.get("user_id")
-    print(user_email)
     password = form.get("password")
     
     errors = []
@@ -42,7 +40,6 @@ async def login(request: Request, response: Response):
                 return templates.TemplateResponse("login.html", {"request": request, "errors": errors})
             else:
                 msg = "Login Successful"
-                print(msg)
                 access_token = token.create_access_token(data={"sub": user["email"]})
                 response = templates.TemplateResponse("/login.html", {"request": request, "msg": msg})
                 response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
