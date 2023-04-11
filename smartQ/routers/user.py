@@ -1,18 +1,15 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-
+from fastapi.responses import RedirectResponse
 from smartQ import schemas, hashing, database, rabbitmq
-router = APIRouter(
-    prefix="/user",
-    tags=['Users']
-)
+
+router = APIRouter(tags=['login'])
 
 templates = Jinja2Templates(directory="frontend")
 
 @router.get("/signin")
 async def home_page(request: Request):
     return templates.TemplateResponse("/signin.html", {'request': request})
-
 
 @router.post('/signin')
 async def create_user(request: Request):
@@ -34,9 +31,8 @@ async def create_user(request: Request):
         else:
             database.insert_user(new_user)
             rabbitmq.make_exchange(new_user.email)
-            msg = "User created"
-            return templates.TemplateResponse("signin.html", {"request": request, "msg": msg})
- 
+            return RedirectResponse('/',status_code=302)
+
     except:
         errors.append("Something Wrong")
         return templates.TemplateResponse("signin.html", {"request": request, "errors": errors})
