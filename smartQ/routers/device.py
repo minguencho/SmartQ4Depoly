@@ -30,7 +30,7 @@ async def device_register(request: Request):
         else:
             user_email = token.verify_token(access_token)
             device = schemas.Device(email=user_email, device_name=device_name)
-            if not database.check_device(device.email, device.device_name):
+            if database.check_device(device.email, device.device_name):
                 errors.append(f"You already have device name [{device_name}]")
                 return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
             else:

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
+from fastapi.templating import Jinja2Templates
 
 from smartQ import schemas, hashing, database, rabbitmq
-from fastapi.templating import Jinja2Templates
 router = APIRouter(
     prefix="/user",
     tags=['Users']

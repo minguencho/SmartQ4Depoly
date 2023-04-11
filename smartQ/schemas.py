@@ -48,4 +48,5 @@ class GetModel(BaseModel):
     
 
 class Model(GetModel):
-    model_name: str
+    email: str
+    
