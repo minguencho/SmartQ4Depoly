@@ -14,12 +14,8 @@ templates = Jinja2Templates(directory="frontend")
 async def home_page(request : Request):
     return templates.TemplateResponse("/login.html", {'request': request})
 
-@router.get("/menu")
-async def menu(request : Request):
-    context = {'request': request}
-    return templates.TemplateResponse("/menu.html", context)
 
-@router.post('/')
+@router.post('/login')
 async def login(request: Request, response: Response):
     form = await request.form()
     user_email = form.get("user_id")
