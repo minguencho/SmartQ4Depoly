@@ -24,6 +24,7 @@ async def device_register(request: Request):
     errors = []
     try:
         scheme,_,access_token = request.cookies.get("access_token").partition(" ")
+        print(access_token)
         if access_token is None:
             errors.append("You have to Login first")
             return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})

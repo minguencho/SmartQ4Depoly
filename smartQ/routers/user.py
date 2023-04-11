@@ -32,9 +32,8 @@ async def create_user(request: Request):
         else:
             database.insert_user(new_user)
             rabbitmq.make_exchange(new_user.email)
-            msg = "User created"
-            return templates.TemplateResponse("signin.html", {"request": request, "msg": msg})
- 
+            return RedirectResponse('/',status_code=302)
+
     except:
         errors.append("Something Wrong")
         return templates.TemplateResponse("signin.html", {"request": request, "errors": errors})
