@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Request
-
-from smartQ import schemas, hashing, database, rabbitmq
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
-from fastapi.responses import HTMLResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
+from smartQ import schemas, hashing, database, rabbitmq
+
 router = APIRouter(tags=['login'])
 
 templates = Jinja2Templates(directory="frontend")
