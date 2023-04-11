@@ -52,15 +52,15 @@
     <div class="login-container">
         <h2>Sign IN</h2>
         {% if msg %}
-            <div class="alert alert-danger", role="alert">
-                {{ msg }}
-            </div>
+        <div class="alert alert-success" role="alert">
+            {{ msg }}
+        </div>
         {% endif %}
-        {% if error %}
-            <div class="alert alert-danger", role="alert">
-                {{ error }}
-            </div>
-        {% endif %}
+        {% for error in errors %}
+        <div class="alert alert-danger" , role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
         <form method="POST">
             <div class="input-field">
                 <label for="user_email">Email</label>
@@ -71,11 +71,6 @@
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit">Complete</button>
-        {% if success %}
-            <div class="alert alert-success", role="alert">
-                {{ success }}
-            </div>
-        {% endif %}
         </form>
     </div>
 </body>
