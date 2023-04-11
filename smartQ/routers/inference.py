@@ -1,17 +1,24 @@
 from fastapi import APIRouter, Depends, status
-
 from smartQ import schemas, oauth2, utils, database
+from fastapi import APIRouter, status, Request
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter(
     prefix="/inference",
     tags=['inference']
 )
 
+templates = Jinja2Templates(directory="frontend")
+
 """
 추론
 request : current_user, img_file, list(model name), list(device_name)
 response : None, just do inference
 """
+
+@router.get('/')
+def inference_page(request: Request):
+    return templates.TemplateResponse("/inference.html", {'request': request})
 
 @router.post('/inference', status_code=status.HTTP_200_OK)
 def inference(inf_data: schemas.InferenceData, current_user: schemas.User = Depends(oauth2.get_current_user)):
