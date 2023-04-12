@@ -51,15 +51,28 @@ def publish_inference_message(messages, exchange_name, routing_keys):
         
     return True
 
-# base64 -> bytes -> numpy.ndarry -> str
-def extract_onnx(onnx):
-    onnx_base64_string = base64.b64encode(onnx).decode('utf-8')
+
+def check_model(email, model_name):
+    user_dir = f'onnx_db/{email}'
+    file_name = model_name
+    model_dir = os.path.join(user_dir, file_name)
     
-    return onnx_base64_string
+    if not os.path.exists(model_dir):
+        return False
+    else:
+        return True
 
 
-def compress_onnx(onnx):
-    return zlib.compress(onnx)
+def write_onnx(email, model_name, model):
+    user_dir = f'onnx_db/{email}'
+    file_name = model_name
+    if not os.path.exists(user_dir):
+        os.makedirs(user_dir)
+        
+    with open(os.path.join(user_dir, file_name), 'wb') as f:
+        f.write(model)
+        
+    return True
 
 
 def result_to_list(results):
