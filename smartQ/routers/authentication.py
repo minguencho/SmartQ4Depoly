@@ -8,7 +8,7 @@ router = APIRouter(tags=['Authentication'])
 templates = Jinja2Templates(directory="frontend")
 
 # Get Home Pages
-@router.get("/login")
+@router.get("/")
 async def home_page(request : Request):
     return templates.TemplateResponse("/login.html", {'request': request})
 
@@ -17,7 +17,7 @@ async def home_page(request : Request):
     context = {'request': request}
     return templates.TemplateResponse("/menu.html", context)"""
 
-@router.post('/login')
+@router.post('/')
 async def login(request: Request, response: Response):
     form = await request.form()
     user_email = form.get("user_id")

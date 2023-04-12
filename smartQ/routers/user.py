@@ -20,7 +20,7 @@ async def home_page(request : Request):
 @router.post('/signin')
 async def create_user(request: Request):
     form = await request.form()
-    user_email = form.get("user_id")
+    user_email = form.get("user_email")
     password = form.get("password")
     print(user_email)
     errors = []
