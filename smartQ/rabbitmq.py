@@ -22,7 +22,6 @@ def publish(message, exchange_name, routing_key_name):
         routing_key=routing_key_name,
         body=pickle.dumps(message)
     )
-    
     return True
     
 
@@ -30,6 +29,22 @@ def publish(message, exchange_name, routing_key_name):
 def make_exchange(exchange_name):
     channel.exchange_declare(exchange=exchange_name, exchange_type='direct')
     return True
+
+
+# not yet
+def get_device_name(email):
+    exchange_name = email
+    queues = []
+    print('hi')
+    try:
+        for queue in channel.get_bindings(exchange=exchange_name):
+            queues.append(queue['queue'])
+    except:
+        print('false')
+        return False
+            
+    print(queues)
+    return queues
 
 
 class Result_Saver():

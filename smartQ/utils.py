@@ -5,12 +5,14 @@ from smartQ import rabbitmq
 
 
 def img2msg(image):
+    messages = []
     message = {}
     message['header'] = 'image'
     message['name'] = 'image.jpg'
     message['contents'] = image
+    messages.append(message)
     
-    return message
+    return messages
 
 
 def model_list2msg(model_list):
@@ -35,6 +37,7 @@ def make_routing_key(device_names):
 
 def publish_inference_message(messages, email, routing_keys):
     exchange_name = email
+    print(1)
     for message in messages:
         for routing_key in routing_keys:
             rabbitmq.publish(message=message, exchange_name=exchange_name, routing_key_name=routing_key)
@@ -65,9 +68,9 @@ def write_onnx(email, model_name, model):
     return True
 
 
-async def get_onnx_file(email, model_names):
+def get_onnx_file(email, model_names):
     
-    model_list = []
+    model_list = {}
     for model_name in model_names:
         user_dir = f'onnx_db/{email}'
         file_name = model_name
@@ -77,15 +80,21 @@ async def get_onnx_file(email, model_names):
             return None
         else:
             with open(model_dir, 'rb') as f:
-                model = await f.read()
-                model_list.append({f'{model_name}': model})
-    
+                model = f.read()
+                model_list[model_name] = model
+                
     return model_list
 
 
 def get_model_name(email):
-    return glob.glob(f'onnx_db/{email}/*.onnx')
+    models = glob.glob(f'onnx_db/{email}/*.onnx')
+    model_name_list = []
+    for model in models:
+        model_tmp = model.replace(f'onnx_db/{email}/', '')
+        model_name_list.append(model_tmp)
     
+    return model_name_list
+
 
 def result_to_list(results):
     results_list = []
