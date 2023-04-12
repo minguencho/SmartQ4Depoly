@@ -1,4 +1,3 @@
-from fastapi import APIRouter, Depends, status
 from smartQ import schemas, oauth2, utils, database
 from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
