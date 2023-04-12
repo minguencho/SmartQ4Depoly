@@ -1,6 +1,7 @@
-from smartQ import schemas, oauth2, utils, database
-from fastapi import APIRouter, status, Request
+from fastapi import APIRouter, status, Request, Depends
 from fastapi.templating import Jinja2Templates
+
+from smartQ import schemas, oauth2, utils, database
 
 router = APIRouter(
     prefix="/inference",

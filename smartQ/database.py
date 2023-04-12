@@ -51,19 +51,6 @@ def insert_device(device):
     db['Devices'].insert_one(dict(device))
     return True
 
-# model_register
-def check_model(email, model_name):
-    if db['Models'].find_one({'email': email, 'model_name': model_name}) is None:
-        return False
-    else:
-        return True
-    
-# model_register
-def insert_model(model):
-    db['Models'].insert_one(dict(model))
-    return True
-
-
 # insert_test_data
 def insert_test_data(dict):
     db['Results'].insert_one(dict)

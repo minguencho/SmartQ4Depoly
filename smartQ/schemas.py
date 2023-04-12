@@ -40,13 +40,3 @@ class GetDevice(BaseModel):
 
 class Device(GetDevice):
     email: str
-
-
-class GetModel(BaseModel):
-    onnx: str
-    model_name: str
-    
-
-class Model(GetModel):
-    email: str
-    

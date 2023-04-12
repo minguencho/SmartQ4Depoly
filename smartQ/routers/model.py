@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
 
-from smartQ import schemas, utils, database, token
+from smartQ import utils, token
 import json
 
 router = APIRouter(
@@ -19,10 +19,9 @@ def device_page(request: Request):
 
 @router.post('/register', status_code=status.HTTP_200_OK)
 async def model_register(request: Request):
-    get_model = await request.body()
-    get_model = json.loads(get_model.decode('utf-8'))
-    my_model_name = get_model['custom_model_name']
-    my_model_contents = get_model['onnx']
+    form = await request.form()
+    model_name = form.get('custom_model_name')
+    model = form['onnx'].file.read()
     errors = []
     try:
         scheme,_,access_token = request.cookies.get("access_token").partition(" ")
@@ -30,23 +29,13 @@ async def model_register(request: Request):
             errors.append("You have to Login first")
             return templates.TemplateResponse("/model.html", {'request': request, 'errors': errors})
         else:
-            print('1')
             user_email = token.verify_token(access_token)
-            print(user_email)
-            onnx_contents = utils.extract_onnx(my_model_contents)
-            print(type(onnx_contents))
-            # onnx_contents = get_model.onnx # for testing
-            model = schemas.Model(email=user_email, onnx=onnx_contents, model_name=my_model_name)
-            print(model.email)
-            if database.check_model(model.email, model.model_name):
-                print('3')
-                errors.append("Input Model name is already exists")
+            if utils.check_model(user_email, model_name):
+                errors.append(f"[{model_name}] Model name is already exists")
                 return templates.TemplateResponse("/model.html", {'request': request, 'errors': errors})
             else:
-                print('2')
-                database.insert_model(model)
-                print('success')
-                msg = f"[{model.model_name}] Reigster successfully"
+                utils.write_onnx(user_email, model_name, model)
+                msg = f"[{model_name}] Reigster successfully"
                 return templates.TemplateResponse("/model.html", {'request': request, 'msg': msg})
 
     except:
