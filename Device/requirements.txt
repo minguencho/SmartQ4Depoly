@@ -1,4 +1,0 @@
-pika
-opencv-python
-numpy
-onnxruntime

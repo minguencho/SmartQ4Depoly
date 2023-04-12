@@ -1,37 +1,28 @@
 import os
-import base64
-import cv2
-import numpy as np
+import glob
 
 from smartQ import rabbitmq
 
 
 def img2msg(image):
-    image = image[image.find(',')+1:]
-    image = np.frombuffer(base64.b64decode(image), np.uint8)
-    contents = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    """cv2.imwrite('smartQ/images/img.jpg', image)
-    with open('smartQ/images/img.jpg', 'rb') as f:
-        contents = f.read()
-    os.remove('smartQ/images/img.jpg')"""
     message = {}
     message['header'] = 'image'
     message['name'] = 'image.jpg'
-    message['contents'] = contents
-    return contents
+    message['contents'] = image
+    
+    return message
 
 
 def models2msg(models):
     messages = []
-    for name, contents in models.items():
+    for model_name, onnx in models.items():
         message = {}
         message['header'] = 'model'
-        message['name'] = name
-        message['contents'] = contents
+        message['name'] = model_name
+        message['contents'] = onnx
         messages.append(message)
         
     return messages
-
 
 
 def make_routing_key(device_names):
@@ -42,7 +33,8 @@ def make_routing_key(device_names):
     return routing_keys
 
 
-def publish_inference_message(messages, exchange_name, routing_keys):
+def publish_inference_message(messages, email, routing_keys):
+    exchange_name = email
     for message in messages:
         # model = {'model_name': resnet, 'model_contents': 1e23nfjui}
         for routing_key in routing_keys:
@@ -73,6 +65,28 @@ def write_onnx(email, model_name, model):
         
     return True
 
+
+async def get_onnx_file(email, model_names):
+    
+    model_list = []
+    for model_name in model_names:
+        user_dir = f'onnx_db/{email}'
+        file_name = model_name
+        model_dir = os.path.join(user_dir, file_name)
+    
+        if not os.path.exists(model_dir):
+            return None
+        else:
+            with open(model_dir, 'rb') as f:
+                model = await f.read()
+                model_list.append({f'{model_name}': model})
+    
+    return model_list
+
+
+def get_model_name(email):
+    return glob.glob(f'onnx_db/{email}/*.onnx')
+    
 
 def result_to_list(results):
     results_list = []
