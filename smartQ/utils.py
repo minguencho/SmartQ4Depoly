@@ -37,7 +37,6 @@ def make_routing_key(device_names):
 
 def publish_inference_message(messages, email, routing_keys):
     exchange_name = email
-    print(1)
     for message in messages:
         for routing_key in routing_keys:
             rabbitmq.publish(message=message, exchange_name=exchange_name, routing_key_name=routing_key)
