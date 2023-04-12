@@ -2,6 +2,7 @@ import os
 import base64
 import numpy as np
 import cv2
+import zlib
 
 from smartQ import rabbitmq
 
@@ -50,13 +51,15 @@ def publish_inference_message(messages, exchange_name, routing_keys):
         
     return True
 
-
+# base64 -> bytes -> numpy.ndarry -> str
 def extract_onnx(onnx):
-    onnx = onnx[onnx.find(',') + 1:]
-    onnx_contents = np.frombuffer(base64.b64decode(onnx), np.uint8)
-    onnx_contents = str(onnx_contents)
+    onnx_base64_string = base64.b64encode(onnx).decode('utf-8')
     
-    return onnx_contents
+    return onnx_base64_string
+
+
+def compress_onnx(onnx):
+    return zlib.compress(onnx)
 
 
 def result_to_list(results):

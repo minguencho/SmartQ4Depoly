@@ -10,3 +10,4 @@ pika
 numpy
 opencv-python
 jinja2
+gzip

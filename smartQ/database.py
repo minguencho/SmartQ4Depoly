@@ -60,7 +60,21 @@ def check_model(email, model_name):
     
 # model_register
 def insert_model(model):
-    db['Models'].insert_one(dict(model))
+    email = model.email
+    onnx = model.onnx
+    model_name = model.model_name
+    
+    # 인덱스 붙이기
+    index = 0
+    chunk_size = 10000000
+    chunks = []
+    while index < len(onnx):
+        chunks.append(onnx[index:index+chunk_size])
+        index += chunk_size
+        
+    for index, chunk in enumerate(chunks):
+        doc = {'email': email, 'model_name': model_name, 'index': index, 'onnx': chunk}
+        db['Models'].insert_one(doc)
     return True
 
 

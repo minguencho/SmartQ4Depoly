@@ -19,10 +19,11 @@ def device_page(request: Request):
 
 @router.post('/register', status_code=status.HTTP_200_OK)
 async def model_register(request: Request):
-    get_model = await request.body()
-    get_model = json.loads(get_model.decode('utf-8'))
-    my_model_name = get_model['custom_model_name']
-    my_model_contents = get_model['onnx']
+    form = await request.form()
+    my_model_name = form.get('custom_model_name')
+    my_model_contents = form['onnx'].file.read()
+    print(my_model_name)
+    print(len(my_model_contents))
     errors = []
     try:
         scheme,_,access_token = request.cookies.get("access_token").partition(" ")
@@ -30,14 +31,11 @@ async def model_register(request: Request):
             errors.append("You have to Login first")
             return templates.TemplateResponse("/model.html", {'request': request, 'errors': errors})
         else:
-            print('1')
             user_email = token.verify_token(access_token)
             print(user_email)
             onnx_contents = utils.extract_onnx(my_model_contents)
-            print(type(onnx_contents))
-            # onnx_contents = get_model.onnx # for testing
+            # onnx_contents = utils.compress_onnx(my_model_contents)
             model = schemas.Model(email=user_email, onnx=onnx_contents, model_name=my_model_name)
-            print(model.email)
             if database.check_model(model.email, model.model_name):
                 print('3')
                 errors.append("Input Model name is already exists")
