@@ -29,14 +29,19 @@ async def device_register(request: Request):
             return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
         else:
             user_email = token.verify_token(access_token)
-            device = schemas.Device(email=user_email, device_name=device_name)
-            if database.check_device(device.email, device.device_name):
-                errors.append(f"You already have device name [{device_name}]")
+            if not user_email:
+                errors.append("Re Login Please")
                 return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
+
             else:
-                database.insert_device(device)
-                msg = f"[{device_name}] Register successfully"
-                return templates.TemplateResponse("/device.html", {'request': request, 'msg': msg})
+                device = schemas.Device(email=user_email, device_name=device_name)
+                if database.check_device(device.email, device.device_name):
+                    errors.append(f"You already have device name [{device_name}]")
+                    return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
+                else:
+                    database.insert_device(device)
+                    msg = f"[{device_name}] Register successfully"
+                    return templates.TemplateResponse("/device.html", {'request': request, 'msg': msg})
     
     except:
         errors.append("Something Wrong. Please Try Again")

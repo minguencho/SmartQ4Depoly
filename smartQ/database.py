@@ -56,6 +56,15 @@ def insert_test_data(dict):
     db['Results'].insert_one(dict)
     return True
 
+
+def get_device_name(email):
+    device_names = []
+    devices = db['Devices'].find({'email': email})
+    for device in devices:
+        device_names.append(device['device_name'])
+        
+    return device_names
+
 # search_all
 def get_results(email):
     return db['Results'].find({'email': email})
