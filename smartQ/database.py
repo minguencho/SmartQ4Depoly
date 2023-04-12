@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-client = "mongodb+srv://cho000130:cho41455@capstone.ajviw1n.mongodb.net/?retryWrites=true&w=majority"
+client = "mongodb+srv://bmk802:ahdrhelqlqlqjs1!@smartq.gan6cow.mongodb.net/?retryWrites=true&w=majority"
 database = "smartQ"
 
 
@@ -21,10 +21,10 @@ def insert_result(message):
 
 # create_user
 def check_user(email):
-    if db['Users'].find_one({'email': email}):
-        return True
-    else:
+    if db['Users'].find_one({'email': email}) is None:
         return False
+    else:
+        return True
 
 # create_user
 def insert_user(user):
@@ -35,16 +35,16 @@ def insert_user(user):
 def get_models(email, model_names):
     model_list = []
     for model_name in model_names:
-        model_list.append({f'{model_name}': db['Models'].find({'email': email}, {'model_name': model_name})['model_contents']})
+        model_list.append({f'{model_name}': db['Models'].find_one({'email': email, 'model_name': model_name})['onnx']})
 
     return model_list
 
 # device_register
 def check_device(email, device_name):
-    if db['Devices'].find_one({'email': email}, {'device_name': device_name}):
-        return True
-    else:
+    if db['Devices'].find_one({'email': email, 'device_name': device_name}) is None:    
         return False
+    else:
+        return True
 
 # device_register
 def insert_device(device):
@@ -53,10 +53,10 @@ def insert_device(device):
 
 # model_register
 def check_model(email, model_name):
-    if db['Models'].find_one({'email': email}, {'model_name': model_name}):
-        return True
-    else:
+    if db['Models'].find_one({'email': email, 'model_name': model_name}) is None:
         return False
+    else:
+        return True
     
 # model_register
 def insert_model(model):

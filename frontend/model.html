@@ -5,7 +5,7 @@
              * @param {string} formSelector
              * @return {object | null}
              */
-                function serializeForm(formSelector) {
+            function serializeForm(formSelector) {
                 const formElm = document.documentElement.querySelector(formSelector);
                 if (formElm === null) {
                     alert('failed to find form element');
@@ -70,7 +70,7 @@
                 payload.onnx = await fileContentPromise;
                 console.log(payload)
                 alert("Uploading Model")
-                const res = await fetch(location.origin + '/home/get_custom_model_page/save_custom_model', {
+                const res = await fetch(location.origin + '/model/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -148,20 +148,30 @@
         <center>
         <div id = "divPosition">
             <h1> [ Custom model ] </h1>
-                <form id='inf-form' method='post' onsubmit='return (requestToCustomModel(), false);'>
-                    <div class="fileRegiBtn">
-                        <label for='onnx'>Upload Your onnx File</label>
-                        <input type='file' id ='onnx' name='onnx' accept='.onnx' required='required' style="display: none">
-                    </div>
-                    <br />
-                    <input type='text' name='custom_model_name' placeholder='모델 별칭을 입력하시오'>
-                    <br>
-                    <br>
-                    <button class="button" id = "button" type='reset' value='초기화'> Initialization </button>
-                    <br>
-                    <br>
-                    <button class="button" id = "button" type='submit' name='submitButton' value='업로드'> Start Upload </button>
-                </form>
+            {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+            {% endif %}
+            {% for error in errors %}
+            <div class="alert alert-danger" , role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+            <form id='inf-form' method='post' onsubmit='return (requestToCustomModel(), false);'>
+                <div class="fileRegiBtn">
+                    <label for='onnx'>Upload Your onnx File</label>
+                    <input type='file' id ='onnx' name='onnx' accept='.onnx' required='required' style="display: none">
+                </div>
+                <br />
+                <input type='text' name='custom_model_name' placeholder='모델 별칭을 입력하시오' required='required'>
+                <br>
+                <br>
+                <button class="button" id = "button" type='reset' value='초기화'> Initialization </button>
+                <br>
+                <br>
+                <button class="button" id = "button" type='submit' name='submitButton' value='업로드'> Start Upload </button>
+            </form>
         <button class = "homebutton" id  = 'home' onclick  = "location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
         </div>
         

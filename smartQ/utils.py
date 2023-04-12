@@ -54,6 +54,7 @@ def publish_inference_message(messages, exchange_name, routing_keys):
 def extract_onnx(onnx):
     onnx = onnx[onnx.find(',') + 1:]
     onnx_contents = np.frombuffer(base64.b64decode(onnx), np.uint8)
+    onnx_contents = str(onnx_contents)
     
     return onnx_contents
 
