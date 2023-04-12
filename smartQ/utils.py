@@ -13,9 +13,9 @@ def img2msg(image):
     return message
 
 
-def models2msg(models):
+def model_list2msg(model_list):
     messages = []
-    for model_name, onnx in models.items():
+    for model_name, onnx in model_list.items():
         message = {}
         message['header'] = 'model'
         message['name'] = model_name
@@ -36,7 +36,6 @@ def make_routing_key(device_names):
 def publish_inference_message(messages, email, routing_keys):
     exchange_name = email
     for message in messages:
-        # model = {'model_name': resnet, 'model_contents': 1e23nfjui}
         for routing_key in routing_keys:
             rabbitmq.publish(message=message, exchange_name=exchange_name, routing_key_name=routing_key)
         

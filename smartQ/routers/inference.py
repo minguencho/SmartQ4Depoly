@@ -62,7 +62,7 @@ async def inference_request(request: Request):
             else:
                 image_msg = utils.img2msg(image)
                 model_list = utils.get_onnx_file(user_email, model_names)
-                models_msg = utils.models2msg(model_list)
+                models_msg = utils.model_list2msg(model_list)
                 msgs = image_msg + models_msg
         
                 routing_keys = utils.make_routing_key(device_names)
