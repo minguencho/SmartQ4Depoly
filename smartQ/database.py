@@ -51,12 +51,7 @@ def insert_device(device):
     db['Devices'].insert_one(dict(device))
     return True
 
-# insert_test_data
-def insert_test_data(dict):
-    db['Results'].insert_one(dict)
-    return True
-
-
+# get inference page
 def get_device_name(email):
     device_names = []
     devices = db['Devices'].find({'email': email})
@@ -64,6 +59,11 @@ def get_device_name(email):
         device_names.append(device['device_name'])
         
     return device_names
+
+# insert_test_data
+def insert_test_data(dict):
+    db['Results'].insert_one(dict)
+    return True
 
 # search_all
 def get_results(email):
