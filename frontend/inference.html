@@ -4,96 +4,27 @@
     </head>
     <body>
         <script>
-            /**
-             * @param {string} formSelector
-             * @return {object | null}
-             */
-                function serializeForm(formSelector) {
-                const formElm = document.documentElement.querySelector(formSelector);
-                if (formElm === null) {
-                    alert('failed to find form element');
-                    return null;
-                }
-
-                const values = {};
-                for (const childElm of formElm.elements) {
-                    if (!(childElm instanceof HTMLInputElement)) {
-                        continue;
-                    }
-
-                    switch (childElm.type.toLowerCase()) {
-                        case 'checkbox': {
-                            if (childElm.attributes.hasOwnProperty('data-group')) {
-                                const groupName = childElm.attributes['data-group'].value;
-                                if (!(groupName in values)) {
-                                    values[groupName] = [];
-                                }
-
-                                if (childElm.checked) {
-                                    values[groupName].push(childElm.value);
-                                }
-                            }
-                            else {
-                                values[childElm.name] = childElm.checked;
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                return values;
-            }
-
-            function readAsBase64(file) {
-                return new Promise((resolve, reject) => {
-                    if (!file)
-                        reject('invalid argument: file is invalid');
-                    
-                    const fileReader = new FileReader();
-                    fileReader.addEventListener('load', () => {
-                        resolve(fileReader.result);
-                    }, false);
-
-                    fileReader.readAsDataURL(file);
-                });
-            }
-
-            async function requestToInference() {
-                const [file] = document.documentElement.querySelector('#inf-form input[type="file"]')?.files;
-                if (!file) 
-                    return false;
-
-                const fileContentPromise = readAsBase64(file);
-
-                const payload = serializeForm('#inf-form');
-                if (payload == null) {
-                    return false;
-                }
-
-                payload.image = await fileContentPromise;
-                console.log(payload.image)
-                if (!payload.image.startsWith('data:image/')) {
-                    alert('Please select valid image file !');
-                    return false;
-                }
-                const res = await fetch(location.origin + '/home/get_inference_page/inference_request', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });               
-            }
-
-            function multiSelect(value){
+            function multiSelect_model(value){
 
                 if(value=="OPEN") {
-                    Div.style.visibility="visible";
-                    Div.style.position="relative";
+                    Div_model.style.visibility="visible";
+                    Div_model.style.position="relative";
                 }
                 else {
-                    Div.style.visibility="hidden";
-                    Div.style.position="absolute";
+                    Div_model.style.visibility="hidden";
+                    Div_model.style.position="absolute";
+                }
+            }
+
+            function multiSelect_device(value){
+
+                if(value=="OPEN") {
+                    Div_device.style.visibility="visible";
+                    Div_device.style.position="relative";
+                }
+                else {
+                    Div_device.style.visibility="hidden";
+                    Div_device.style.position="absolute";
                 }
             }
             
@@ -182,32 +113,62 @@
                 margin: 10px 100px 10px 100px;
             }
 
+            #select_device{
+                margin: 10px 100px 10px 100px;
+            }
+
             select, ul { height: 100px; overflow: auto; width: 200px; border: 1px solid #000; }            
             ul {list-style-type: none; margin: 0; padding: 0; overflow-x: hidden; }
             li { margin: 0; padding: 0;}
         </style>
         <div id = "divPosition">
             <h2>Inference</h2>
-
-            <form id = "formstyle" method='post' onsubmit='return (requestToInference(), false);'>
+            {% if msg %}
+                <div class="alert alert-success" role="alert">
+                    {{ msg }}
+                </div>
+            {% endif %}
+            {% for error in errors %}
+                <div class="alert alert-danger" , role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            <form id = "formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/inference/inference_request">
                 <div class="fileRegiBtn">
                     <label for="image_file">Upload IMG File</label>
                     <input type="file" id="image_file" name ="image_file" accept='image/*' required='required' style="display: none">
                 </div>
                 <div id='select_model' style="position :relative; font-size:12px; border: #000;">
                     <label>Model Select</label>
-                    <button onClick="multiSelect('OPEN')">▼</button>
+                    <button type="button" onClick="multiSelect_model('OPEN')">▼</button>
                     <br>
-                    <div id="Div" style="position :absolute; visibility:hidden; font-size:12px;">
+                    <div id="Div_model" style="position :absolute; visibility:hidden; font-size:12px;">
                         <div style="padding-top:3px;text-align:center">
                             <ul>
                                 {% for model in model_names %}
-                                    <li><input type='checkbox' data-group='model_names' value='{{model}}'>{{ model }}</li>
+                                    <li><input type='checkbox' name='model_names' value='{{model}}'>{{ model }}</li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div style="padding-top:3px;text-align:right">
-                            <input type="button" value="확인" onClick="multiSelect('CLOSE')">
+                            <input type="button" value="확인" onClick="multiSelect_model('CLOSE')">
+                        </div>
+                    </div>
+                </div>
+                <div id='select_device' style="position :relative; font-size:12px; border: #000;">
+                    <label>Device Select</label>
+                    <button type="button" onClick="multiSelect_device('OPEN')">▼</button>
+                    <br>
+                    <div id="Div_device" style="position :absolute; visibility:hidden; font-size:12px;">
+                        <div style="padding-top:3px;text-align:center">
+                            <ul>
+                                {% for device in device_names %}
+                                    <li><input type='checkbox' name='device_names' value='{{device}}'>{{ device }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div style="padding-top:3px;text-align:right">
+                            <input type="button" value="확인" onClick="multiSelect_device('CLOSE')">
                         </div>
                     </div>
                 </div>

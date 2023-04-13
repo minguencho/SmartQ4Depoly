@@ -1,2 +1,4 @@
 __pycache__
 *.pyc
+/onnx/db/*
+!/onnx_db/.gitkeep
