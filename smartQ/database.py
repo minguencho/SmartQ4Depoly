@@ -69,4 +69,3 @@ def insert_test_data(dict):
 def get_results(email):
     return db['Results'].find({'email': email})
 
-
