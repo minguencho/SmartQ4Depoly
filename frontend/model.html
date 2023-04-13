@@ -1,4 +1,7 @@
 <html>
+    <head>
+        <title>SmartQ - 커스텀 모델 업로드</title>
+    </head>
     <body>
         <script>
             /**
@@ -81,29 +84,16 @@
             }
             
         </script>
-        <style>
-
-        #home {
-        margin: 375px 0px 0px 900px;
-        position :absolute;
-        border: 0;
-        color: #277ef0;
-        outline: auto;
-        font-size: 15px;
-        flex-direction: column;
-        align-items: center;
-        }          
+        <style>      
         #divPosition{
-            background-color: rgb(129, 182, 231);
-            border: 3px;
-            position: absolute;
-            height: 300px;
-            width: 400px;
-            margin: -150px 0px 0px -200px;
-            top: 35%;
-            left: 50%;
-            padding: 5px;
-            border-radius: 2em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 100px auto;
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
         }
         .fileRegiBtn label {
             display: inline-block; 
@@ -112,7 +102,7 @@
             font-size: inherit; 
             line-height: normal; 
             vertical-align: middle; 
-            background-color: #277ef0; 
+            background-color: #4CAF50; 
             cursor: pointer; 
             border: 1px solid #ebebeb; 
             border-bottom-color: #e2e2e2; 
@@ -120,32 +110,27 @@
         }
         
         #button{
-            width: 40%;
+            padding: 15px;
             border: 0;
-            color: #277ef0;
-            outline: auto;
+            color: #000;
             font-size: 15px;
             flex-direction: column;
             align-items: center;
             font-weight: 600;
+            margin: 5px 0px 5px 0px;
         }
         button.homebutton{
-            position: absolute;
-            color: #277ef0;
-            right: 0%;
-            bottom: -10%;
-            width: 10%;
+            padding: 15px;
             border: 0;
-            outline: auto;
+            color: #000;
             font-size: 15px;
             flex-direction: column;
             align-items: center;
-            font-weight: 400;
+            font-weight: 600;
+            margin: 40px 10px 10px 300px;
         }
-
-
         </style>
-        <center>
+
         <div id = "divPosition">
             <h1> [ Custom model ] </h1>
             {% if msg %}
@@ -174,7 +159,5 @@
             </form>
         <button class = "homebutton" id  = 'home' onclick  = "location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
         </div>
-        
-        </center>
     </body>
 </html>

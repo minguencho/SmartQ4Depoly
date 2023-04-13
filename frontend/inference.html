@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>추론</title>
+        <title>SmartQ - 추론</title>
     </head>
     <body>
         <script>
@@ -103,42 +103,64 @@
         
         </script>
         <style>
-            body {padding: auto; margin: auto; background-color: rgb(129, 182, 231);}
+            body {padding: auto; margin: auto;}
+
+            h2{
+            position: relative;
+            margin: 7%;
+            align-items: center;
+            width: 50%;
+            height: auto;
+            text-align: center;
+            }
 
             #divPosition{
-                background-color: rgb(219, 224, 229);
-                border: 3px;
-                position: absolute;
-                height: 400px;
-                width: 400px;
-                margin: -150px 0px 0px -200px;
-                top: 35%;
-                left: 50%;
-                padding: 5px;
-                border-radius: 2em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 100px auto;
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
+            }
+            
+            form.formstyle{
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+            border: 1px solid #ccc;
+            text-align: center;
+            }
+            
+            #menuButtons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: auto;
             }
 
             #button{
-            width: 20%;
+            padding: 15px;
             border: 0;
-            color: #277ef0;
-            outline: auto;
+            color: #000;
             font-size: 15px;
             flex-direction: column;
             align-items: center;
             font-weight: 600;
-            margin: 40px 0px 0px 250px;
+            margin: 40px 10px 10px 300px;
             }
 
             #inferencebutton{
-            width: 40%;
+            padding: 15px;
             border: 0;
-            color: #277ef0;
-            outline: auto;
+            color: #000;
             font-size: 15px;
             flex-direction: column;
             align-items: center;
             font-weight: 600;
+            margin: 10px 10px 10px 10px;
             }
 
             .fileRegiBtn label {
@@ -148,37 +170,31 @@
             font-size: inherit; 
             line-height: normal; 
             vertical-align: middle; 
-            background-color: #277ef0; 
+            background-color: #4CAF50; 
             cursor: pointer; 
             border: 1px solid #ebebeb; 
             border-bottom-color: #e2e2e2; 
             border-radius: .25em;
+            margin: 10%;
             }
 
             #select_model{
-                margin: 0px 100px 0px 100px;
+                margin: 10px 100px 10px 100px;
             }
 
             select, ul { height: 100px; overflow: auto; width: 200px; border: 1px solid #000; }            
             ul {list-style-type: none; margin: 0; padding: 0; overflow-x: hidden; }
             li { margin: 0; padding: 0;}
         </style>
-
-
         <div id = "divPosition">
+            <h2>Inference</h2>
 
-            <center>
-
-            <h1 style="text-align: center;"> [Inference] </h1>
-
-            <form id='inf-form' method='post' onsubmit='return (requestToInference(), false);'>
+            <form id = "formstyle" method='post' onsubmit='return (requestToInference(), false);'>
                 <div class="fileRegiBtn">
                     <label for="image_file">Upload IMG File</label>
                     <input type="file" id="image_file" name ="image_file" accept='image/*' required='required' style="display: none">
                 </div>
-                
-                <br><br>
-                <div id='select_model' style="position :relative; font-size:12px;">
+                <div id='select_model' style="position :relative; font-size:12px; border: #000;">
                     <label>Model Select</label>
                     <button onClick="multiSelect('OPEN')">▼</button>
                     <br>
@@ -195,15 +211,12 @@
                         </div>
                     </div>
                 </div>
-                
-                <br><br>
+                <div id = "menuButtons">
                 <button class = "button" id = "inferencebutton" type='reset'> Initialization </button>
-                <br><br>
                 <button class = "button" id = "inferencebutton" type='submit' onclick="al()"> Start Inference </button>
-
+                </div>
             </form>
             <button class="button" id = "button" onclick  = "location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
-            <center>
         </div>
     </body>
 </html>
