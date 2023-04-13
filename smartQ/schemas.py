@@ -27,12 +27,6 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     email: Optional[str] = None
     
-
-class InferenceData(BaseModel):
-    image: str
-    model_names: List[str]
-    device_names: List[str]
-    
     
 class GetDevice(BaseModel):
     device_name: str
@@ -40,12 +34,3 @@ class GetDevice(BaseModel):
 
 class Device(GetDevice):
     email: str
-
-
-class GetModel(BaseModel):
-    onnx: str
-    model_name: str
-    
-
-class Model(GetModel):
-    model_name: str

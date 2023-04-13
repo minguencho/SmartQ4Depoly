@@ -1,67 +1,70 @@
 <html>
-    <body>
-        <style>
-        #home {
-        margin: 375px 0px 0px 900px;
-        position :absolute;
-        border: 0;
-        color: #277ef0;
-        outline: auto;
-        font-size: 15px;
-        flex-direction: column;
-        align-items: center;
-        }          
-        #divPosition{
-            background-color: rgb(129, 182, 231);
-            border: 3px;
-            position: absolute;
-            height: 300px;
-            width: 400px;
-            margin: -150px 0px 0px -200px;
-            top: 35%;
-            left: 50%;
-            padding: 5px;
-            border-radius: 2em;
-        }
-        #button{
-            width: 40%;
-            border: 0;
-            color: #277ef0;
-            outline: auto;
-            font-size: 20px;
-            flex-direction: column;
+    <head>
+        <title>SmartQ - 장치 등록</title>
+    </head>
+<body>
+    <style>
+        h2{
+            position: relative;
+            margin: auto;
             align-items: center;
-            font-weight: 600;
+            width: 50%;
+            height: auto;
+            text-align: center;
         }
-        button.homebutton{
-            position: absolute;
-            color: #277ef0;
-            right: 0%;
-            bottom: -10%;
-            width: 10%;
-            border: 0;
-            outline: auto;
-            font-size: 15px;
-            flex-direction: column;
-            align-items: center;
-            font-weight: 400;
+        #divrapper{
+            position: relative;
+            margin: 100px auto;
+            max-width: 800px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
         }
 
-        </style>
-         <center>
-            <div id = "divPosition">
-                <br>
-                <h1> [ Device Register ] </h1>
-                    <form id='inf-form' method='post' onsubmit='return (requestToCustomModel(), false);'>
-                        <br>
-                        <input type='text' name='custom_model_name' placeholder='Insert Deive Name'>
-                        <br>
-                        <br>
-                        <button class="button" id = "button" type='submit' name='submitButton' value='Register'> Register </button>
-                    </form>
-            <button class = "homebutton" id  = 'home' onclick  = "location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
+        #button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button.homebutton {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 10px;
+            padding: 10px 20px;
+            font-weight: 600;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+        <div id="divrapper">
+            <br>
+            <h2>Device Register</h2>
+            {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
             </div>
-            
-            </center>
-    </body>
+            {% endif %}
+            {% for error in errors %}
+            <div class="alert alert-danger" , role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+            <form method="POST">
+                <br>
+                <input type='text' name='device_name' placeholder='Insert Deive Name'>
+                <br>
+                <br>
+                <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
+                </button>
+            </form>
+            <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
+        </div>
+</body>
+
 </html>
