@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 
-client = "mongodb+srv://bmk802:ahdrhelqlqlqjs1!@smartq.gan6cow.mongodb.net/?retryWrites=true&w=majority"
+client = "mongodb+srv://cho000130:cho41455@capstone.ajviw1n.mongodb.net/?retryWrites=true&w=majority"
 database = "smartQ"
 
 
@@ -51,18 +51,14 @@ def insert_device(device):
     db['Devices'].insert_one(dict(device))
     return True
 
-# model_register
-def check_model(email, model_name):
-    if db['Models'].find_one({'email': email, 'model_name': model_name}) is None:
-        return False
-    else:
-        return True
-    
-# model_register
-def insert_model(model):
-    db['Models'].insert_one(dict(model))
-    return True
-
+# get inference page
+def get_device_name(email):
+    device_names = []
+    devices = db['Devices'].find({'email': email})
+    for device in devices:
+        device_names.append(device['device_name'])
+        
+    return device_names
 
 # insert_test_data
 def insert_test_data(dict):
