@@ -1,4 +1,5 @@
-from fastapi import APIRouter, status, Request
+from fastapi import APIRouter, status, Request, Response
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from smartQ import utils, token, rabbitmq, database
@@ -18,7 +19,7 @@ response : None, just do inference
 
 @router.get('/')
 def inference_page(request: Request):
-    
+
     errors = []
     try:
         scheme,_,access_token = request.cookies.get("access_token").partition(" ")
@@ -38,7 +39,8 @@ def inference_page(request: Request):
                     return templates.TemplateResponse("/inference.html", {'request': request, 'errors': errors})
                 else:
                     model_names = utils.get_model_name(user_email)
-                    return templates.TemplateResponse("/inference.html", {'request': request, 'model_names': model_names, 'device_names': device_names})
+                    context = {'request': request, 'model_names': model_names, 'device_names': device_names}
+                    return templates.TemplateResponse("/inference.html", context)
 
     except:
         errors.append("Something Wrong. Please Try Again")
@@ -46,12 +48,11 @@ def inference_page(request: Request):
 
 
 @router.post('/inference_request', status_code=status.HTTP_200_OK)
-async def inference_request(request: Request):
+async def inference_request(request: Request, response: Response):
     form = await request.form()
     image = form['image_file'].file.read()
     model_names = form.getlist('model_names')
     device_names = form.getlist('device_names')
-    
     errors = []
     try:
         scheme,_,access_token = request.cookies.get("access_token").partition(" ")
@@ -71,8 +72,7 @@ async def inference_request(request: Request):
                 routing_keys = utils.make_routing_key(device_names)
                 utils.publish_inference_message(msgs, user_email, routing_keys)
                 
-                msg = f"Inference Requested"
-                return templates.TemplateResponse("/inference.html", {'request': request, 'msg': msg})
+                return RedirectResponse(f'/inference/', status_code=302)
 
     except:
         errors.append("Something Wrong. Please Try Again")
