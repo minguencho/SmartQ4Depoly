@@ -28,6 +28,18 @@
                 }
             }
             
+            function multiSelect_group(value){
+
+                if(value=="OPEN") {
+                    Div_group.style.visibility="visible";
+                    Div_group.style.position="relative";
+                }
+                else {
+                    Div_group.style.visibility="hidden";
+                    Div_group.style.position="absolute";
+                }
+            }
+
             function al(){
                 alert("추론 시작. 최대 1분 소요")
             }
@@ -169,6 +181,23 @@
                         </div>
                         <div style="padding-top:3px;text-align:right">
                             <input type="button" value="확인" onClick="multiSelect_device('CLOSE')">
+                        </div>
+                    </div>
+                </div>
+                <div id='select_group' style="position :relative; font-size:12px; border: #000;">
+                    <label>Group Select</label>
+                    <button type="button" onClick="multiSelect_group('OPEN')">▼</button>
+                    <br>
+                    <div id="Div_group" style="position :absolute; visibility:hidden; font-size:12px;">
+                        <div style="padding-top:3px;text-align:center">
+                            <ul>
+                                {% for groupo in group_names %}
+                                    <li><input type='checkbox' name='group_names' value='{{group}}'>{{ group }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div style="padding-top:3px;text-align:right">
+                            <input type="button" value="확인" onClick="multiSelect_group('CLOSE')">
                         </div>
                     </div>
                 </div>

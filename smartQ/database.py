@@ -31,6 +31,24 @@ def insert_user(user):
     db['Users'].insert_one(dict(user))
     return True
 
+# get inference page
+def get_device_names(email):
+    device_names = []
+    devices = db['Devices'].find({'email': email})
+    for device in devices:
+        device_names.append(device['device_name'])
+        
+    return device_names
+
+# get inference page
+def get_group_names(email):
+    group_names = []
+    groups = db['Groups'].find({'email': email})
+    for group in groups:
+        group_names.append(group['group_name'])
+        
+    return group_names
+
 # inference
 def get_models(email, model_names):
     model_list = []
@@ -38,6 +56,16 @@ def get_models(email, model_names):
         model_list.append({f'{model_name}': db['Models'].find_one({'email': email, 'model_name': model_name})['onnx']})
 
     return model_list
+
+# inference
+def get_device_from_group(email, group_names):
+    devices_list = []
+    for group_name in group_names:
+        group_devices = db['Groups'].find({'email': email, 'group_name': group_name})
+        for group_device in group_devices:
+            devices_list.append(group_device['device_name'])
+            
+    return devices_list
 
 # device_register
 def check_device(email, device_name):
@@ -50,15 +78,6 @@ def check_device(email, device_name):
 def insert_device(device):
     db['Devices'].insert_one(dict(device))
     return True
-
-# get inference page
-def get_device_name(email):
-    device_names = []
-    devices = db['Devices'].find({'email': email})
-    for device in devices:
-        device_names.append(device['device_name'])
-        
-    return device_names
 
 # insert_test_data
 def insert_test_data(dict):

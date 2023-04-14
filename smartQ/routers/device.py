@@ -43,33 +43,20 @@ async def device_register(request: Request):
     try:
         scheme,_,access_token = request.cookies.get("access_token").partition(" ")
         if access_token is None:
-            errors.append("You have to Login first")
-            return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
+           return RedirectResponse('/device/',status_code=302)
         else:
             user_email = token.verify_token(access_token)
             if not user_email:
-                errors.append("Re Login Please")
-                return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
-
+                return RedirectResponse('/device/',status_code=302)
             else:
                 device = schemas.Device(email=user_email, device_name=device_name)
                 if database.check_device(device.email, device.device_name):
                     errors.append(f"You already have device name [{device_name}]")
-                    return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
+                    return RedirectResponse('/device/',status_code=302)
                 else:
                     database.insert_device(device)
-                    response = RedirectResponse('/device',status_code=302)
-                    return response
+                    return RedirectResponse('/device/',status_code=302)
                     
-                    #return templates.TemplateResponse("/device.html", {'request': request, 'msg': msg})
     except:
-        errors.append("Something Wrong. Please Try Again")
-        return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
-    
-"""                    parm = {"device_names" : device_names}
-                    print(parm)
-                    print(type(parm))
-                    response = RedirectResponse('/device',status_code=302, parms = parm)
-                    return response
-                    #return templates.TemplateResponse("/device.html", {'request': request,'device_names': device_names})
-"""    
+        return RedirectResponse('/device/',status_code=302)
+
