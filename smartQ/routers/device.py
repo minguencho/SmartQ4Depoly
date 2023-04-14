@@ -58,9 +58,7 @@ async def device_register(request: Request):
                     return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
                 else:
                     database.insert_device(device)
-                    msg = f"[{device_name}] Register successfully"
-                    parms = {'msg' : msg}
-                    response = RedirectResponse('/device',status_code=302, parms = parms)
+                    response = RedirectResponse('/device',status_code=302)
                     return response
                     
                     #return templates.TemplateResponse("/device.html", {'request': request, 'msg': msg})
