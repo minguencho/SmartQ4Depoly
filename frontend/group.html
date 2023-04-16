@@ -95,96 +95,80 @@
                 float: right;
             }
         </style>
-            <div id="divrapper">
+        <div id="divrapper">
+            <br>
+            <h2>Group Register</h2>
+            {% if msg %}
+            <div class="alert alert-success" role="alert">
+                {{ msg }}
+            </div>
+            {% endif %}
+            {% for error in errors %}
+            <div class="alert alert-danger" , role="alert">
+                {{ error }}
+            </div>
+            {% endfor %}
+            <form id = "formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/group/register">
                 <br>
-                <h2>Device Register</h2>
-                {% if msg %}
-                <div class="alert alert-success" role="alert">
-                    {{ msg }}
-                </div>
-                {% endif %}
-                {% for error in errors %}
-                <div class="alert alert-danger" , role="alert">
-                    {{ error }}
-                </div>
-                {% endfor %}
-                <form id = "formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/group/register">
-                    <br>
-                    <input type='text' name='group_name' placeholder='Insert Group Name'>
-                    <br>
-                    <br>
-                    <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
-                    </button>
-                </form>
-                <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu/'">MENU</button>
-            </div>
-            <div id="divrapper">
-                <form id = "formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/group/device2group">
-                    <br>
-                    <h2>Add Device to Group</h2>
-                    <input type='text' name='group_name' placeholder='Insert Group Name'>
-                    <br>
-                    <label>Device Select</label>
-                    <button type="button" onClick="multiSelect_device('OPEN')">▼</button>
-                    <br>
-                    <div id="Div_device" style="position :absolute; visibility:hidden; font-size:12px;">
-                        <div style="padding-top:3px;text-align:center">
-                            <ul>
-                                {% for device in device_names %}
-                                    <li><input type='checkbox' name='device_names' value='{{device}}'>{{ device }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div style="padding-top:3px;text-align:right">
-                            <input type="button" value="확인" onClick="multiSelect_device('CLOSE')">
-                        </div>
-                    </div>
-                    <br>
-                    <br>
-                    <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
-                    </button>
-                </form>
-                <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu/'">MENU</button>
-            </div>
-            <div id='group_list'>
-                <h2>Group List</h2>
-                <button class = 'button' id="subdivbutton" onClick="multiSelect_group('OPEN')">open</button>
+                <input type='text' name='group_name' placeholder='Insert Group Name'>
                 <br>
-                <div id="Div_group" style="position :absolute; visibility:hidden; font-size:12px;">
-                    <div style="padding-top:3px;text-align:center">
-                        <ul style="list-style: none; padding-left : 0;">
-                            {% for group_name in group_names %}
-                                <h2>{{ group_name }}</h2>
-                                <ul>
-                                    {% for device in group_name %}
-                                        <li>{{ device }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div style="padding-top:3px; padding-bottom : 10px; text-align:right">               
-                        <button class = 'button' id="subdivbutton" onClick="multiSelect_group('Close')">close</button>
-                    </div>
-                </div>
-            </div>
-            <div id='subdiv'>
-                <h2>Device List</h2>
-                <button class = 'button' id="subdivbutton" onClick="multiSelect_list('OPEN')">open</button>
+                <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
+                </button>
+            </form>
+            <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu/'">MENU</button>
+        </div>
+        <div id="divrapper">
+            <form id = "formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/group/device2group">
+                <br>
+                <h2>Add Device to Group</h2>
+                <input type='text' name='group_name' placeholder='Insert Group Name'>
+                <br>
+                <label>Device Select</label>
+                <button type="button" onClick="multiSelect_device('OPEN')">▼</button>
                 <br>
                 <div id="Div_device" style="position :absolute; visibility:hidden; font-size:12px;">
                     <div style="padding-top:3px;text-align:center">
-                        <ul style="list-style: none; padding-left : 0;">
+                        <ul>
                             {% for device in device_names %}
-                                <li>{{ device }}</li>
+                                <li><input type='checkbox' name='device_names' value='{{device}}'>{{ device }}</li>
                             {% endfor %}
                         </ul>
                     </div>
-                    <div style="padding-top:3px; padding-bottom : 10px; text-align:right">               
-                        <button class = 'button' id="subdivbutton" onClick="multiSelect_list('Close')">close</button>
+                    <div style="padding-top:3px;text-align:right">
+                        <input type="button" value="확인" onClick="multiSelect_device('CLOSE')">
                     </div>
                 </div>
+                <br>
+                <br>
+                <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
+                </button>
+            </form>
+            <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu/'">MENU</button>
+        </div>
+        <div id='group_list'>
+            <h2>Group List</h2>
+            <button class = 'button' id="subdivbutton" onClick="multiSelect_group('OPEN')">open</button>
+            <br>
+            <div id="Div_group" style="position :absolute; visibility:hidden; font-size:12px;">
+                <div style="padding-top:3px;text-align:center">
+                    <ul style="list-style: none; padding-left : 0;">
+                        {% for group_name in group_names %}
+                            {% for group, devices in group_name.items() %}
+                                <h2>{{ group }}</h2>
+                                    <ul>
+                                        {% for device in devices %}
+                                            <li>{{ device }}</li>
+                                        {% endfor %}
+                                    </ul>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div style="padding-top:3px; padding-bottom : 10px; text-align:right">               
+                    <button class = 'button' id="subdivbutton" onClick="multiSelect_group('Close')">close</button>
+                </div>
             </div>
+        </div>
     </body>
 
 </html>

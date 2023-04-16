@@ -38,15 +38,15 @@ def get_device_names(email):
     devices = db['Devices'].find({'email': email})
     for device in devices:
         device_names.append(device['device_name'])
-        
+    
     return device_names
 
-# get inference page
+# get inference page, get device_page
 def get_group_names(email):
     group_names = []
     groups = db['Groups'].find({'email': email})
     for group in groups:
-        group_names.appned(group['group_name'])
+        group_names.append(group['group_name'])
         
     return group_names
 
@@ -82,18 +82,24 @@ def insert_device(device):
 
 # get group_page
 def get_group_dict_list(email):
-    dict_list = defaultdict(list)
+    ret_val = {'group_names': []}
+    # {'group_names': [{'group_name': [group_devices], 'group_name2': [group_devices2]}]}
     groups = db['Groups'].find({'email': email})
     for group in groups:
+        group_devices = {}
         key = group['group_name']
         value = group['device_names']
-        dict_list[key].update(value)
-    
-    return dict_list
+        if value is not None:
+            group_devices[key] = value
+        else:
+            group_devices[key] = []
+        ret_val['group_names'].append(group_devices)
+
+    return ret_val 
 
 # group_register
 def check_group(email, group_name):
-    if db['Devices'].find_one({'email': email, 'group_name': group_name}) is None:    
+    if db['Groups'].find_one({'email': email, 'group_name': group_name}) is None:    
         return False
     else:
         return True
@@ -105,9 +111,12 @@ def insert_group(group):
 
 # device2group
 def insert_device2group(email, group_name, device_names):
+    group_device = db['Groups'].find_one({'email': email, 'group_name': group_name})['device_names']
+    if group_device is None:
+        update = {"$set": {"device_names": device_names}}
+    else:
+        update = {"$push": {"device_names": device_names}}
     query = {'email': email, 'group_name': group_name}
-    new_devices = device_names
-    update = {"$addToSet": {"device_names": {"$each": new_devices}}}
     db['Groups'].update_one(query, update)
     return True
 

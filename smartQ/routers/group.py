@@ -27,9 +27,8 @@ def group_page(request: Request):
                 return templates.TemplateResponse("/group.html", {'request': request, 'errors': errors})
             else:
                 device_names = database.get_device_names(user_email)
-                group_names = database.get_group_names(user_email)
                 group_dict = database.get_group_dict_list(user_email)
-                context = {'request': request, 'device_names': device_names, 'group_names': group_names}
+                context = {'request': request, 'device_names': device_names}
                 context.update(group_dict)
                 return templates.TemplateResponse("/group.html", context)
     except:
@@ -58,10 +57,10 @@ async def group_register(request: Request):
                     return RedirectResponse('/group/',status_code=302)
                 else:
                     database.insert_group(group)
-                    return RedirectResponse('/device/',status_code=302)
+                    return RedirectResponse('/group/',status_code=302)
                     
     except:
-        return RedirectResponse('/device/',status_code=302)
+        return RedirectResponse('/group/',status_code=302)
 
 
 @router.post('/device2group', status_code=status.HTTP_200_OK)
@@ -69,6 +68,7 @@ async def device2group(request: Request):
     form = await request.form()
     device_names = form.getlist('device_names')
     group_name = form.get('group_name')
+    print(device_names)
 
     errors = []
     try:
@@ -86,7 +86,7 @@ async def device2group(request: Request):
                     return RedirectResponse('/group/',status_code=302)
                 else:
                     database.insert_device2group(user_email, group_name, device_names)
-                    return RedirectResponse('/device/',status_code=302)
+                    return RedirectResponse('/group/',status_code=302)
                     
     except:
-        return RedirectResponse('/device/',status_code=302)
+        return RedirectResponse('/group/',status_code=302)

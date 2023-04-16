@@ -26,7 +26,7 @@ def device_page(request: Request):
                 errors.append("Re Login Please")
                 return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
             else:
-                device_names = database.get_device_name(user_email)
+                device_names = database.get_device_names(user_email)
                 return templates.TemplateResponse("/device.html", {'request': request, 'device_names' : device_names})
     except:
         errors.append("Something Wrong. Please Try Again")
