@@ -1,3 +1,4 @@
+from collections import defaultdict
 from pymongo import MongoClient
 
 client = "mongodb+srv://bmk802:ahdrhelqlqlqjs1!@smartq.gan6cow.mongodb.net/?retryWrites=true&w=majority"
@@ -45,7 +46,7 @@ def get_group_names(email):
     group_names = []
     groups = db['Groups'].find({'email': email})
     for group in groups:
-        group_names.append(group['group_name'])
+        group_names.appned(group['group_name'])
         
     return group_names
 
@@ -79,9 +80,35 @@ def insert_device(device):
     db['Devices'].insert_one(dict(device))
     return True
 
-# insert_test_data
-def insert_test_data(dict):
-    db['Results'].insert_one(dict)
+# get group_page
+def get_group_dict_list(email):
+    dict_list = defaultdict(list)
+    groups = db['Groups'].find({'email': email})
+    for group in groups:
+        key = group['group_name']
+        value = group['device_names']
+        dict_list[key].update(value)
+    
+    return dict_list
+
+# group_register
+def check_group(email, group_name):
+    if db['Devices'].find_one({'email': email, 'group_name': group_name}) is None:    
+        return False
+    else:
+        return True
+
+# group_register
+def insert_group(group):
+    db['Groups'].insert_one(dict(group))
+    return True
+
+# device2group
+def insert_device2group(email, group_name, device_names):
+    query = {'email': email, 'group_name': group_name}
+    new_devices = device_names
+    update = {"$addToSet": {"device_names": {"$each": new_devices}}}
+    db['Groups'].update_one(query, update)
     return True
 
 # search_all
