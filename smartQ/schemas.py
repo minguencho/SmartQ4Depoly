@@ -26,26 +26,13 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
-    
 
-class InferenceData(BaseModel):
-    image: str
-    model_names: List[str]
-    device_names: List[str]
-    
-    
-class GetDevice(BaseModel):
+
+class Device(BaseModel):
+    email: str
     device_name: str
 
-
-class Device(GetDevice):
+class Group(BaseModel):
     email: str
-
-
-class GetModel(BaseModel):
-    onnx: str
-    model_name: str
-    
-
-class Model(GetModel):
-    model_name: str
+    group_name: str
+    device_names: Optional[List] = None

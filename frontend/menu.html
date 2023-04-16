@@ -1,50 +1,77 @@
 <html>
     <head>
+        <title>SmartQ - 메뉴</title>
+    </head>
     <style>
         body {padding: auto; margin: auto;}
-
+        h2{
+            position: relative;
+            margin: auto;
+            border-style: solid;
+            align-items: center;
+            width: 50%;
+            height: auto;
+            text-align: center;
+        }
         #divPosition{
-            background-color: rgb(129, 182, 231);
-            border: 3px;
-            position: absolute;
-            height: 300px;
-            width: 400px;
-            margin: -150px 0px 0px -200px;
-            top: 35%;
-            left: 50%;
-            padding: 5px;
-            border-radius: 2em;
+            margin: 100px auto;
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
         }
 
+        #Logoutdiv {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 60%;
+        }
+
+        #menuButtons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 60%;
+        }
+      
+
        button.button{
-            width: 50%;
+            margin: 5%;
+            width: 100%;
+            height: 15%;
             border: 0;
-            outline: auto;
             font-size: 20px;
+            font-weight: 600;
+            border-radius: 10px;
+            }
+
+        button.logout{
+            position: relative;
+            left: 130px;
+            width: 17%;
+            border: 0;
+            font-size: 15px;
             flex-direction: column;
             align-items: center;
             font-weight: 600;
-            }
-
+            margin-left: 30px;
+            border-radius: 10px;
+        }
     </style>
     <body>
         <div id = "divPosition">
-            <center>
-            <br>
-            <h2>[ MENU ]</h2>
-            <br>
-            <button class = "button" onclick  = "location.href = 'http://127.0.0.1:8000/menu/device'">Device</button>
-            <br>
-            <br>
-            <button class = "button" onclick  = "location.href = 'http://127.0.0.1:8000/menu/inference'">Inference</button>
-            <br>
-            <br>
-            <button class = "button" onclick  = "location.href = 'http://127.0.0.1:8000/menu/result'">Search Result</button>
-            <br>
-            <br>
-            <button class = "button" onclick  = "location.href = 'http://127.0.0.1:8000/menu/model'">Custom Model</button>
-            <br>
-            </center>
+            <h2>MENU</h2>
+            <div id = "menuButtons">
+            <button class = "button" onclick  = "location.href = 'http://127.0.0.1:8000/device'">Device</button>
+            <button class = "button" onclick  = "location.href = 'http://127.0.0.1:8000/inference'">Inference</button>
+            <button class = "button" onclick  = "location.href = 'http://127.0.0.1:8000/result'">Search Result</button>
+            <button class = "button" onclick  = "location.href = 'http://127.0.0.1:8000/model'">Custom Model</button>
+            </div>
+            <button class = "logout" onclick  = "location.href = 'http://127.0.0.1:8000/'">Logout</button>
         </div>
         
     </body>

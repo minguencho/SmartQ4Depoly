@@ -1,30 +1,42 @@
-from fastapi import APIRouter, status, HTTPException, Request
-
-from smartQ import schemas, hashing, database, rabbitmq
+from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-router = APIRouter(
-    prefix="/user",
-    tags=['Users']
-)
+from fastapi.responses import RedirectResponse
+from smartQ import schemas, hashing, database, rabbitmq
+
+router = APIRouter(tags=['login'])
 
 templates = Jinja2Templates(directory="frontend")
 
-@router.get("/signin")
-async def home_page(request : Request):
-    context = {'request': request}
-    return templates.TemplateResponse("/signin.html", context)
+@router.get("/signup")
+async def home_page(request: Request):
+    return templates.TemplateResponse("/signup.html", {'request': request})
 
+@router.post('/signup')
+async def create_user(request: Request):
+    form = await request.form()
+    user_email = form.get("user_email")
+    password = form.get("password")
+    
+    errors = []
+    if not user_email:
+        errors.append("Please Enter Email")
+    if not password:
+        errors.append("Please Enter Password ")
+    
+    try:
+        new_user = schemas.User(email=user_email, password=hashing.Hash.bcrypt(password))
+        if database.check_user(new_user.email):
+            errors.append("Email already exists")
+            return templates.TemplateResponse("signup.html", {"request": request, "errors": errors})
+        else:
+            database.insert_user(new_user)
+            rabbitmq.make_exchange(new_user.email)
+            return RedirectResponse('/',status_code=302)
 
-@router.post('/create')
-def create_user(request: schemas.User):
-    new_user = schemas.User(email=request.email, password=hashing.Hash.bcrypt(request.password))
-    if database.check_user(new_user.email):
-        raise HTTPException(status_code=status.HTTP_226_IM_USED, detail="User email is already exist")
-    
-    database.insert_user(new_user)
-    rabbitmq.make_exchange(new_user.email)
-    
-    return f"{new_user.email} User created"
+    except:
+        errors.append("Something Wrong")
+        return templates.TemplateResponse("signup.html", {"request": request, "errors": errors})
+
 
 """
 @router.get('/get/{email}')

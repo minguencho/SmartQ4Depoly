@@ -1,88 +1,9 @@
 <html>
+    <head>
+        <title>SmartQ - 커스텀 모델 업로드</title>
+    </head>
     <body>
-        <script>
-            /**
-             * @param {string} formSelector
-             * @return {object | null}
-             */
-                function serializeForm(formSelector) {
-                const formElm = document.documentElement.querySelector(formSelector);
-                if (formElm === null) {
-                    alert('failed to find form element');
-                    return null;
-                }
-                const values = {};
-                for (const childElm of formElm.elements) {
-                    if (!(childElm instanceof HTMLInputElement)) {
-                        continue;
-                    }
-                    switch (childElm.type.toLowerCase()) {
-                        case 'checkbox': {
-                            if (childElm.attributes.hasOwnProperty('data-group')) {
-                                const groupName = childElm.attributes['data-group'].value;
-                                if (!(groupName in values)) {
-                                    values[groupName] = [];
-                                }
-
-                                if (childElm.checked) {
-                                    values[groupName].push(childElm.value);
-                                }
-                            }
-                            else {
-                                values[childElm.name] = childElm.checked;
-                            }
-                            break;
-                        }
-                        case 'text': {
-                            values[childElm.name] = childElm.value;
-                            break;
-                        }
-                    }
-                }
-                return values;
-            }
-            
-            function readAsBase64(file) {
-                return new Promise((resolve, reject) => {
-                    if (!file)
-                        reject('invalid argument: file is invalid');
-                    
-                    const fileReader = new FileReader();
-                    fileReader.addEventListener('load', () => {
-                        resolve(fileReader.result);
-                    }, false);
-
-                    fileReader.readAsDataURL(file);
-                });
-            }
-
-            async function requestToCustomModel() {
-                const [file] = document.documentElement.querySelector('#inf-form input[type="file"]')?.files;
-                if (!file) 
-                    return false;
-                
-                const fileContentPromise = readAsBase64(file);
-
-                const payload = serializeForm('#inf-form');
-                if (payload == null) {
-                    return false;
-                }
-                payload.onnx = await fileContentPromise;
-                console.log(payload)
-                alert("Uploading Model")
-                const res = await fetch(location.origin + '/home/get_custom_model_page/save_custom_model', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
-                alert("Upload Complete")     
-            }
-            
-        </script>
         <style>
-
         #home {
         margin: 375px 0px 0px 900px;
         position :absolute;
@@ -94,16 +15,14 @@
         align-items: center;
         }          
         #divPosition{
-            background-color: rgb(129, 182, 231);
-            border: 3px;
-            position: absolute;
-            height: 300px;
-            width: 400px;
-            margin: -150px 0px 0px -200px;
-            top: 35%;
-            left: 50%;
-            padding: 5px;
-            border-radius: 2em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 100px auto;
+            max-width: 400px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
         }
         .fileRegiBtn label {
             display: inline-block; 
@@ -112,7 +31,7 @@
             font-size: inherit; 
             line-height: normal; 
             vertical-align: middle; 
-            background-color: #277ef0; 
+            background-color: #4CAF50; 
             cursor: pointer; 
             border: 1px solid #ebebeb; 
             border-bottom-color: #e2e2e2; 
@@ -120,51 +39,54 @@
         }
         
         #button{
-            width: 40%;
+            padding: 15px;
             border: 0;
-            color: #277ef0;
-            outline: auto;
+            color: #000;
             font-size: 15px;
             flex-direction: column;
             align-items: center;
             font-weight: 600;
+            margin: 5px 0px 5px 0px;
         }
         button.homebutton{
-            position: absolute;
-            color: #277ef0;
-            right: 0%;
-            bottom: -10%;
-            width: 10%;
+            padding: 15px;
             border: 0;
-            outline: auto;
+            color: #000;
             font-size: 15px;
             flex-direction: column;
             align-items: center;
-            font-weight: 400;
+            font-weight: 600;
+            margin: 40px 10px 10px 300px;
         }
-
-
         </style>
-        <center>
+
         <div id = "divPosition">
             <h1> [ Custom model ] </h1>
-                <form id='inf-form' method='post' onsubmit='return (requestToCustomModel(), false);'>
-                    <div class="fileRegiBtn">
-                        <label for='onnx'>Upload Your onnx File</label>
-                        <input type='file' id ='onnx' name='onnx' accept='.onnx' required='required' style="display: none">
-                    </div>
-                    <br />
-                    <input type='text' name='custom_model_name' placeholder='모델 별칭을 입력하시오'>
-                    <br>
-                    <br>
-                    <button class="button" id = "button" type='reset' value='초기화'> Initialization </button>
-                    <br>
-                    <br>
-                    <button class="button" id = "button" type='submit' name='submitButton' value='업로드'> Start Upload </button>
-                </form>
+            {% if msg %}
+                <div class="alert alert-success" role="alert">
+                    {{ msg }}
+                </div>
+            {% endif %}
+            {% for error in errors %}
+                <div class="alert alert-danger" , role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            <form id='inf-form' method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/model/register">
+                <div class="fileRegiBtn">
+                    <label for='onnx'>Upload Your onnx File</label>
+                    <input type='file' id ='onnx' name='onnx' accept='.onnx' required='required' style="display: none">
+                </div>
+                <br />
+                <input type='text' name='custom_model_name' placeholder='모델 별칭을 입력하시오' required='required'>
+                <br>
+                <br>
+                <button class="button" id = "button" type='reset' value='초기화'> Initialization </button>
+                <br>
+                <br>
+                <button class="button" id = "button" type='submit' name='submitButton' value='업로드'> Start Upload </button>
+            </form>
         <button class = "homebutton" id  = 'home' onclick  = "location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
         </div>
-        
-        </center>
     </body>
 </html>

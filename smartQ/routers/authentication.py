@@ -9,14 +9,15 @@ router = APIRouter(tags=['Authentication'])
 templates = Jinja2Templates(directory="frontend")
 
 # Get Home Pages
-@router.get("/login")
+@router.get("/")
 async def home_page(request : Request):
     return templates.TemplateResponse("/login.html", {'request': request})
 
-@router.post('/login')
+
+@router.post('/')
 async def login(request: Request, response: Response):
     form = await request.form()
-    user_email = form.get("user_id")
+    user_email = form.get("user_email")
     password = form.get("password")
     
     errors = []
@@ -35,11 +36,11 @@ async def login(request: Request, response: Response):
                 errors.append("Invalid Password")
                 return templates.TemplateResponse("login.html", {"request": request, "errors": errors})
             else:
-                msg = "Login Successful"
                 access_token = token.create_access_token(data={"sub": user["email"]})
-                response = templates.TemplateResponse("/login.html", {"request": request, "msg": msg})
+                response = RedirectResponse('/menu', status_code=302)
                 response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
                 return response
+
     except:
         errors.append("Something Wrong")
         return templates.TemplateResponse("login.html", {"request": request, "errors": errors})
