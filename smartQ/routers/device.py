@@ -1,9 +1,7 @@
 from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
-from smartQ import schemas, database, token, utils
-
-from typing import Optional
+from smartQ import schemas, database, token
 
 router = APIRouter(
     prefix="/device",
@@ -14,8 +12,8 @@ templates = Jinja2Templates(directory="frontend")
 
 
 @router.get('/')
-def device_page(request: Request, msg: str = ''):
-    print(msg)
+def device_page(request: Request):
+    
     errors = []
     try:
         scheme,_,access_token = request.cookies.get("access_token").partition(" ")
@@ -58,13 +56,14 @@ async def device_register(request: Request):
                     return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
                 else:
                     database.insert_device(device)
+                    msg = f"[{device_name}] Register successfully"
+                    parms = {'msg' : msg,'errors' : errors}
                     response = RedirectResponse('/device',status_code=302)
                     return response
-                    
                     #return templates.TemplateResponse("/device.html", {'request': request, 'msg': msg})
     except:
         errors.append("Something Wrong. Please Try Again")
-        return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})
+        return templates.TemplateResponse("/inference.html", {'request': request, 'errors': errors})
     
 """                    parm = {"device_names" : device_names}
                     print(parm)
