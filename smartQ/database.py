@@ -1,7 +1,7 @@
 from collections import defaultdict
 from pymongo import MongoClient
 
-client = "mongodb+srv://cho000130:cho41455@capstone.ajviw1n.mongodb.net/?retryWrites=true&w=majority"
+client = "mongodb+srv://bmk802:ahdrhelqlqlqjs1!@smartq.gan6cow.mongodb.net/?retryWrites=true&w=majority"
 database = "smartQ"
 
 
