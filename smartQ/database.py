@@ -121,6 +121,28 @@ def insert_device2group(email, group_name, device_names):
     return True
 
 # search_all
-def get_results(email):
-    return db['Results'].find({'email': email})
+def get_results(email, search, keyword):
+    if search == 'all':
+        results = db['Results'].find({'email': email})
+    elif search == 'device_name':
+        results = db['Results'].find({'email': email, 'device_name': keyword})
+    elif search == 'model_name':
+        results = db['Results'].find({'email': email, f'model_name': keyword})
+    
+    if results is not None:
+        keys = results[0].keys()
+        values = []
+        for result in results:
+            values.append(result.values())
+        delete_key = [1]
 
+    else:
+        keys = []
+        values = []
+        delete_key = [0]
+    
+    return {'keys': keys, 'values': values, 'delete_key': delete_key}
+
+# delete_all
+def delete_all(email):
+    db['Results'].delete_many({'email': email})
