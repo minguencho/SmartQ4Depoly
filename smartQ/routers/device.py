@@ -10,7 +10,6 @@ router = APIRouter(
 
 templates = Jinja2Templates(directory="frontend")
 
-
 @router.get('/')
 def device_page(request: Request):
     
@@ -33,7 +32,7 @@ def device_page(request: Request):
         return templates.TemplateResponse("/device.html", {'request': request, 'errors': errors})    
 
 
-@router.post('/', status_code=status.HTTP_200_OK)
+@router.post('/register', status_code=status.HTTP_200_OK)
 async def device_register(request: Request):
     form = await request.form()
     device_name = form.get("device_name")
