@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, status, HTTPException, Request
+from fastapi import APIRouter, status, Request
 from fastapi.templating import Jinja2Templates
-from smartQ import schemas, oauth2, utils, database, token, database
+from smartQ import database, token, database
 
 router = APIRouter(
     prefix="/result",

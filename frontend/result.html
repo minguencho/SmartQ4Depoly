@@ -82,6 +82,16 @@
     <body>
         <div id = "divPosition">
             <h2>Search Result</h2>
+            {% if msg %}
+                <div class="alert alert-success" role="alert">
+                    {{ msg }}
+                </div>
+            {% endif %}
+            {% for error in errors %}
+                <div class="alert alert-danger" , role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
             <form method='GET' action="http://127.0.0.1:8000/result/search">
                 <div class = "search">
                     <select name='search'>
@@ -95,7 +105,7 @@
                     <br>
                 </div>
             </form>
-            <button class = "button" id  = 'home' onclick  = "location.href = 'http://127.0.0.1:8000/menu'">Menu</button>
+            <button class = "button" id  = 'home' onclick  = "location.href = 'http://127.0.0.1:8000/menu/'">Menu</button>
         </div>
         <table class="type09">
             <thead>
