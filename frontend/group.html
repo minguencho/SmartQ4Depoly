@@ -21,18 +21,6 @@
 
                 if(value=="OPEN") {
                     Div_device.style.visibility="visible";
-                    Div_deivce.style.position="relative";
-                }
-                else {
-                    Div_device.style.visibility="hidden";
-                    Div_device.style.position="absolute";
-                }
-            }
-
-            function multiSelect_list(value){
-
-                if(value=="OPEN") {
-                    Div_device.style.visibility="visible";
                     Div_device.style.position="relative";
                 }
                 else {
@@ -49,15 +37,6 @@
                 align-items: center;
                 width: 50%;
                 height: auto;
-                text-align: center;
-            }
-            #divrapper{
-                position: relative;
-                margin: 100px auto;
-                margin-bottom: 10px;
-                max-width: 800px;
-                padding: 20px;
-                border: 1px solid #ccc;
                 text-align: center;
             }
 
@@ -94,55 +73,95 @@
             #subdivbutton{
                 float: right;
             }
+            #container {
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: space-between;
+            }
+            #group-register {
+                width: 50%;
+                height: 50%;
+                border-right: 1px solid #ccc;
+                padding: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+                flex-direction: column;
+            }
+            #add-device {
+                width: 50%;
+                height: 50%;
+                border-right: 1px solid #ccc;
+                padding: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+                flex-direction: column;
+            }
+            #group-list {
+                margin-top: 10px;
+                border: 1px solid #ccc;
+                padding: 10px;
+            }
+            #formstyle{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                align-content: center;
+                flex-direction: column;   
+            }
+            
         </style>
-        <div id="divrapper">
-            <br>
-            <h2>Group Register</h2>
-            {% if msg %}
-            <div class="alert alert-success" role="alert">
-                {{ msg }}
-            </div>
-            {% endif %}
-            {% for error in errors %}
-            <div class="alert alert-danger" , role="alert">
-                {{ error }}
-            </div>
-            {% endfor %}
-            <form id = "formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/group/register">
+        <div id="container">
+            <div id = "group-register">
                 <br>
-                <input type='text' name='group_name' placeholder='Insert Group Name'>
-                <br>
-                <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
-                </button>
-            </form>
-            <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu/'">MENU</button>
-        </div>
-        <div id="divrapper">
-            <form id = "formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/group/device2group">
-                <br>
-                <h2>Add Device to Group</h2>
-                <input type='text' name='group_name' placeholder='Insert Group Name'>
-                <br>
-                <label>Device Select</label>
-                <button type="button" onClick="multiSelect_device('OPEN')">▼</button>
-                <br>
-                <div id="Div_device" style="position :absolute; visibility:hidden; font-size:12px;">
-                    <div style="padding-top:3px;text-align:center">
-                        <ul>
-                            {% for device in device_names %}
-                                <li><input type='checkbox' name='device_names' value='{{device}}'>{{ device }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div style="padding-top:3px;text-align:right">
-                        <input type="button" value="확인" onClick="multiSelect_device('CLOSE')">
-                    </div>
+                <h2>Group Register</h2>
+                {% if msg %}
+                <div class="alert alert-success" role="alert">
+                    {{ msg }}
                 </div>
+                {% endif %}
+                {% for error in errors %}
+                <div class="alert alert-danger" , role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                <form id = "formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/group/register">
+                    <br>
+                    <input type='text' name='group_name' placeholder='Insert Group Name'>
+                    <br>
+                    <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register</button>
+                </form> 
+            </div>
+            <div id="add-device">
                 <br>
-                <br>
-                <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
-                </button>
-            </form>
+                <h2 style="white-space: nowrap;">Add Device to Group</h2>
+                <form id="formstyle" method='post' enctype="multipart/form-data" action="http://127.0.0.1:8000/group/device2group">
+                    <br>
+                    <input type='text' name='group_name' placeholder='Insert Group Name'>
+                    <br>
+                    <div style="position: relative;">
+                        <label>Device Select</label>
+                        <button type="button" onClick="multiSelect_device('OPEN')">▼</button>
+                        <div id="Div_device" style="position :absolute; visibility:hidden; font-size:12px;">
+                            <div style="padding-top:3px;text-align:center">
+                                <ul style="list-style: none; padding-left : 0;">
+                                    {% for device in device_names %}
+                                        <li><input type='checkbox' name='device_names' value='{{device}}'>{{ device }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div style="padding-top:3px;text-align:right">
+                                <input type="button" value="확인" onClick="multiSelect_device('CLOSE')">
+                            </div>
+                        </div>
+                    </div>
+                  <button class="button" id="button" type='submit' name='submitButton' value='Register' style = "margin-top:10px"> Register</button>
+                </form>
+              </div>
             <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu/'">MENU</button>
         </div>
         <div id='group_list'>
@@ -155,9 +174,9 @@
                         {% for group_name in group_names %}
                             {% for group, devices in group_name.items() %}
                                 <h2>{{ group }}</h2>
-                                    <ul>
+                                    <ul style="list-style: none; padding-left : 0;">
                                         {% for device in devices %}
-                                            <li>{{ device }}</li>
+                                            <li> - {{ device }}</li>
                                         {% endfor %}
                                     </ul>
                             {% endfor %}
@@ -168,6 +187,7 @@
                     <button class = 'button' id="subdivbutton" onClick="multiSelect_group('Close')">close</button>
                 </div>
             </div>
+            <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu/'">MENU</button>
         </div>
     </body>
 
