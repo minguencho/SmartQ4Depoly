@@ -72,11 +72,9 @@ async def inference_request(request: Request):
                 group_devices = database.get_device_from_group(user_email, group_names)
                 device_names += group_devices
                 routing_keys = utils.make_routing_key(device_names)
-                
                 utils.publish_inference_message(msgs, user_email, routing_keys)
-                
                 return RedirectResponse(f'/inference/', status_code=302)
 
     except:
         errors.append("Something Wrong. Please Try Again")
-        return templates.TemplateResponse("/inference.html", {'request': request, 'errors': errors})
+        return RedirectResponse(f'/inference/', status_code=302)

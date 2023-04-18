@@ -1,4 +1,3 @@
-from collections import defaultdict
 from pymongo import MongoClient
 
 client = "mongodb+srv://bmk802:ahdrhelqlqlqjs1!@smartq.gan6cow.mongodb.net/?retryWrites=true&w=majority"
@@ -62,10 +61,10 @@ def get_models(email, model_names):
 def get_device_from_group(email, group_names):
     devices_list = []
     for group_name in group_names:
-        group_devices = db['Groups'].find({'email': email, 'group_name': group_name})
+        group_devices = db['Groups'].find_one({'email': email, 'group_name': group_name})['device_names']
         for group_device in group_devices:
-            devices_list.append(group_device['device_name'])
-            
+            devices_list.append(group_device)
+
     return devices_list
 
 # device_register
@@ -127,7 +126,7 @@ def get_results(email, search, keyword):
     elif search == 'device_name':
         results = db['Results'].find({'email': email, 'device_name': keyword})
     elif search == 'model_name':
-        results = db['Results'].find({'email': email, f'model_name': keyword})
+        results = db['Results'].find({'email': email, 'model_name': keyword})
     
     if results is not None:
         keys = results[0].keys()
