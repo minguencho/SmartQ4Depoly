@@ -2,6 +2,7 @@ from fastapi import APIRouter, Response, Request
 from fastapi.templating import Jinja2Templates
 from smartQ import token, database
 from smartQ.hashing import Hash
+from fastapi.responses import RedirectResponse
 
 router = APIRouter(tags=['Authentication'])
 
