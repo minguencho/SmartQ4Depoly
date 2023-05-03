@@ -57,6 +57,7 @@ class Result_Saver():
     def callback(self, ch, method, properties, body):
         message = pickle.loads(body, encoding='bytes')
         database.insert_result(message)
+        print('[MongoDB] Result Saved')
         ch.basic_ack(delivery_tag=method.delivery_tag)
         
 
@@ -64,8 +65,3 @@ class Result_Saver():
         channel.basic_consume(on_message_callback=self.callback, queue=self.queue_name)
         print('[MongoDB] Start Consuming')
         channel.start_consuming()
-        
-    
-    def stop_consume(self):
-        print('[MongoDB] Stop Consuming')
-        channel.stop_consuming()

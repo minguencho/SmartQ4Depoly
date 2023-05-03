@@ -2,46 +2,105 @@
     <head>
         <title>SmartQ - 장치 등록</title>
     </head>
-<body>
-    <style>
-        h2{
-            position: relative;
-            margin: auto;
-            align-items: center;
-            width: 50%;
-            height: auto;
-            text-align: center;
-        }
-        #divrapper{
-            position: relative;
-            margin: 100px auto;
-            max-width: 800px;
-            padding: 20px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
+    <body>
+        <script>
+            function multiSelect_list(value){
 
-        #button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+                if(value=="OPEN") {
+                    Div_device.style.visibility="visible";
+                    Div_device.style.position="relative";
+                }
+                else {
+                    Div_device.style.visibility="hidden";
+                    Div_device.style.position="absolute";
+                }
+            }
 
-        button.homebutton {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            margin: 10px;
-            padding: 10px 20px;
-            font-weight: 600;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-    </style>
+            function multiSelect_use(value){
+
+                if(value=="OPEN") {
+                    Div_use.style.visibility="visible";
+                    Div_use.style.position="relative";
+                }
+                else {
+                    Div_use.style.visibility="hidden";
+                    Div_use.style.position="absolute";
+                }
+            }
+        </script>
+        <style>
+            h2{
+                position: relative;
+                margin: auto;
+                align-items: center;
+                width: 50%;
+                height: auto;
+                text-align: center;
+            }
+            #divrapper{
+                position: relative;
+                margin: 100px auto;
+                margin-bottom: 10px;
+                max-width: 800px;
+                padding: 20px;
+                border: 1px solid #ccc;
+                text-align: center;
+            }
+
+            #button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+            button.homebutton {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                margin: 10px;
+                padding: 10px 20px;
+                font-weight: 600;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+            #subdiv{
+                position: relative;
+                margin: 100px auto;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                max-width: 800px;
+                padding: 20px;
+                border: 1px solid #ccc;
+                text-align: center;
+            }
+            #subdivbutton{
+                float: right;
+            }
+        </style>
+        <div id='subdiv'>
+            <h2>Read before Regist</h2>
+            <button class="button" id="subdivbutton" onClick="multiSelect_use('OPEN')">open</button>
+            <br>
+            <div id="Div_use" style="position :absolute; visibility:hidden; font-size:12px;">
+                <div style="padding-top:3px;text-align:left">
+                    <h3>You have to follow below commands in your device bash</h3>
+                    <ul style="list-style: none; padding-left : 0;">
+                        <li>1. git clone https://github.com/BangMingGing/SmartQ-Device.git</li>
+                        <li>2. cd SmartQ-Device</li>
+                        <li>3. pip3 install -r requirements.txt</li>
+                        <li>4. python3 device.py --smartq_id={Your SmartQ ID} --device_name={Your Device Name}</li>
+                        <li>5. You can register your {Your Device name} down here</li>
+                    </ul>
+                </div>
+                <div style="padding-top:3px; padding-bottom : 10px; text-align:right">               
+                    <button class = 'button' id="subdivbutton" onClick="multiSelect_use('Close')">close</button>
+                </div>
+            </div>
+        </div>
         <div id="divrapper">
             <br>
             <h2>Device Register</h2>
@@ -63,8 +122,24 @@
                 <button class="button" id="button" type='submit' name='submitButton' value='Register'> Register
                 </button>
             </form>
-            <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu'">MENU</button>
+            <button class="homebutton" id='home' onclick="location.href = 'http://127.0.0.1:8000/menu/'">MENU</button>
         </div>
-</body>
-
+        <div id='subdiv'>
+            <h2>Device List</h2>
+            <button class = 'button' id="subdivbutton" onClick="multiSelect_list('OPEN')">open</button>
+            <br>
+            <div id="Div_device" style="position :absolute; visibility:hidden; font-size:12px;">
+                <div style="padding-top:3px;text-align:center">
+                    <ul style="list-style: none; padding-left : 0;">
+                        {% for device in device_names %}
+                            <li>{{ device }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div style="padding-top:3px; padding-bottom : 10px; text-align:right">               
+                    <button class = 'button' id="subdivbutton" onClick="multiSelect_list('Close')">close</button>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

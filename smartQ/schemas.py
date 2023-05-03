@@ -31,6 +31,7 @@ class TokenData(BaseModel):
 class GetDevice(BaseModel):
     device_name: str
 
-
-class Device(GetDevice):
+class Group(BaseModel):
     email: str
+    group_name: str
+    device_names: Optional[List] = None
